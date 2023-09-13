@@ -3,7 +3,9 @@ const Tile = ({ xPos, yPos }) => {
 
     return (
         <>
-            <p>tile here</p>
+            <p>tile here{xPos}{yPos}</p>
         </>
     )
 }
+
+export default Tile;
