@@ -1,10 +1,11 @@
 import './App.css'
+import Board from './Components/Board.jsx'
 
 function App() {
 
   return (
     <>
-      <p>Page here</p>
+      <Board />
     </>
   )
 }
