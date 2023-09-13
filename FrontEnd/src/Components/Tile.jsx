@@ -1,9 +1,11 @@
-const Tile = ({ xPos, yPos }) => {
+import { getTileColour } from "../Utils/boardUtils.jsx";
 
+const Tile = ({ xPos, yPos }) => {
+    const tileColour = getTileColour(xPos, yPos);
 
     return (
         <>
-            <p>tile here{xPos}{yPos}</p>
+            <div className={`${tileColour} tileContainer`}>{xPos}{yPos}</div>
         </>
     )
 }

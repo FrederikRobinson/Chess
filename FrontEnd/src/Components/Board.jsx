@@ -1,4 +1,5 @@
 import Tile from './Tile.jsx'
+import './Board.css';
 import { createBoard } from '../Utils/boardUtils.jsx'
 
 
@@ -8,8 +9,13 @@ const Board = () => {
 
     return (
         <>
-            <p>Board here</p>
-            {tiles}
+            <div className="boardContainer">
+                <p>Board here</p>
+                <div className="tilesContainer">
+                    {tiles}
+                </div>
+            </div>
+
         </>
     )
 }

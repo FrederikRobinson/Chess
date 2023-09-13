@@ -19,11 +19,23 @@ const createRow = (y) => {
 const createTile = (x, y) => {
     const yPos = y;
     const xPos = posToLetter(x)
-    return <Tile className={`${xPos} ${yPos}`} xPos={xPos} yPos={yPos} key={`${xPos} ${yPos}`} />;
+    return <Tile xPos={xPos} yPos={yPos} key={`${xPos} ${yPos}`} />;
 }
+
+export const getTileColour = (xPos, yPos) => {
+    const x = letterToPos(xPos);
+    const y = yPos;
+    return POS_TO_COLOUR[(x + y) % 2];
+}
+
+const POS_TO_COLOUR = ['black', 'white'];
 
 const POS_TO_LETTER = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 
 const posToLetter = (pos) => {
     return POS_TO_LETTER[pos - 1];
+}
+
+const letterToPos = (letter) => {
+    return POS_TO_LETTER.indexOf(letter) + 1;
 }
