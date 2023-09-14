@@ -5,7 +5,9 @@ const Tile = ({ xPos, yPos }) => {
 
     return (
         <>
-            <div className={`${tileColour} tileContainer`}>{xPos}{yPos}</div>
+            <div className={`${tileColour} x${xPos} y${yPos} tileContainer`}>
+                <div className={"tileContent"}>{xPos}{yPos}</div>
+            </div>
         </>
     )
 }

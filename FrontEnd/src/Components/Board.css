@@ -1,6 +1,91 @@
-.tilesContainer {
-    border-color: green;
+.boardContainer {
+    justify-content: center;
+    display: flex;
 }
+
+.tilesContainer {
+    flex-basis: 50%;
+
+    border-color: green;
+    display: grid
+}
+
+.tileContainer {
+    width: 100%;
+    padding-top: 100%;
+    display: inline;
+    position: relative;
+}
+
+.tileContent {
+    position: absolute;
+    top: 0;
+}
+
+.xa {
+    grid-column: 1;
+}
+
+.xb {
+    grid-column: 2;
+}
+
+.xc {
+    grid-column: 3;
+}
+
+.xd {
+    grid-column: 4;
+}
+
+.xe {
+    grid-column: 5;
+}
+
+.xf {
+    grid-column: 6;
+}
+
+.xg {
+    grid-column: 7;
+}
+
+.xh {
+    grid-column: 8;
+}
+
+.y1 {
+    grid-row: 8;
+}
+
+.y2 {
+    grid-row: 7;
+}
+
+.y3 {
+    grid-row: 6;
+}
+
+.y4 {
+    grid-row: 5;
+}
+
+.y5 {
+    grid-row: 4;
+}
+
+.y6 {
+    grid-row: 3;
+}
+
+.y7 {
+    grid-row: 2;
+}
+
+.y8 {
+    grid-row: 1;
+}
+
 
 .black {
     background-color: brown;
@@ -8,4 +93,8 @@
 
 .white {
     background-color: beige;
+}
+
+:root {
+    background-color: aquamarine;
 }

@@ -10,7 +10,6 @@ const Board = () => {
     return (
         <>
             <div className="boardContainer">
-                <p>Board here</p>
                 <div className="tilesContainer">
                     {tiles}
                 </div>
