@@ -4,6 +4,7 @@ import java.time.Year;
 
 public class ChessBoard {
     private final ChessPiece[][] BOARD = new ChessPiece[8][8];
+    private final ChessPiece EMPTY_PIECE = new ChessPiece('X','X');
     public ChessBoard(){
         setBoard();
     }
@@ -14,10 +15,46 @@ public class ChessBoard {
             }
         }
     }
-    public void placePiece(ChessPiece piece,int xPos,int yPos){
+    public boolean placePiece(ChessPiece piece,int xPos,int yPos){
+        if (xPos>=0 && yPos>=0 && xPos<8 && yPos<8){
         BOARD[xPos][yPos]=piece;
+        return true;
+        }
+        return false;
     }
     public ChessPiece pieceAt(int xPos,int yPos){
         return BOARD[xPos][yPos];
+    }
+
+    public boolean movePiece(int startXPos,int startYPos,int endXPos,int endYPos){
+        ChessPiece movingPiece = pieceAt(startXPos,startYPos);
+        switch (movingPiece.getPieceType()) {
+            case 'P':
+                if (isMoveValidPawn(startXPos, startYPos, endXPos, endYPos)) {
+                    performMove(startXPos, startYPos, endXPos, endYPos);
+                    return true;
+                }
+        }
+
+        return false;
+    }
+    public void performMove(int startXPos,int startYPos,int endXPos,int endYPos) {
+        placePiece(pieceAt(startXPos,startYPos),endXPos,endYPos);
+        placePiece(EMPTY_PIECE,startXPos,startYPos);
+}
+
+
+    public boolean isMoveValidPawn(int startXPos,int startYPos,int endXPos, int endYPos){
+        if (startXPos!=endXPos){
+            return false;
+        }
+        if ((startYPos+1)==endYPos){
+            return true;
+        }
+        if ((startYPos+2)==endYPos && startYPos==1){
+            return true;
+        }
+        return false;
+
     }
 }
