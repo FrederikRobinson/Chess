@@ -166,5 +166,5 @@ public class PawnMovementTests {
         testBoard.movePiece(2,5,2,3);
         assertEquals(testBoard.getEmptyPiece(),testBoard.pieceAt(2,3));
     }
-
+//TODO add moving off board tests
 }

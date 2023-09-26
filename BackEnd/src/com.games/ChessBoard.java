@@ -1,7 +1,5 @@
 package com.games;
 
-import java.time.Year;
-
 public class ChessBoard {
     private final ChessPiece[][] BOARD = new ChessPiece[8][8];
     private final ChessPiece EMPTY_PIECE = new ChessPiece('X','X');
@@ -30,16 +28,44 @@ public class ChessBoard {
     }
 
     public boolean movePiece(int startXPos,int startYPos,int endXPos,int endYPos){
-        ChessPiece movingPiece = pieceAt(startXPos,startYPos);
-        switch (movingPiece.getPieceType()) {
+        if(!checkPositionIsOnBoard(startXPos, startYPos) || !checkPositionIsOnBoard(endXPos,endYPos)){
+            return false;
+        }
+//        ChessPiece movingPiece = pieceAt(startXPos,startYPos);
+        switch (pieceAt(startXPos,startYPos).getPieceType()) {
             case 'P':
                 if (isMoveValidPawn(startXPos, startYPos, endXPos, endYPos)) {
                     performMove(startXPos, startYPos, endXPos, endYPos);
                     return true;
                 }
+            case 'R':
+                if (isMoveValidRook(startXPos,startYPos,endXPos,endYPos)){
+                    performMove(startXPos,startYPos,endXPos,endYPos);
+                    return true;
+                }
         }
 
         return false;
+    }
+
+    private boolean isMoveValidRook(int startXPos,int startYPos,int endXPos,int endYPos){
+        if (startXPos!=endXPos && startYPos!=endYPos){
+            return false;
+        }
+        return isMoveValidStraightLine(startXPos,startYPos,endXPos,endYPos);
+    }
+
+    private boolean isMoveValidStraightLine(int startXPos,int startYPos,int endXPos,int endYPos){
+        int xDirection = (startXPos==endXPos) ? 0 : (startXPos>endXPos) ? -1 : 1;
+        int yDirection = (startYPos==endYPos) ? 0 : (startYPos>endYPos) ? -1 : 1;
+        int stepMax=Math.max(Math.abs(startXPos-endXPos),Math.abs(startYPos-endYPos));
+        for (int stepCount = 1; stepCount <stepMax ; stepCount++) {
+            if (!isPositionEmpty(startXPos+(xDirection*stepCount),startYPos+(yDirection*stepCount))){
+                return false;
+            }
+        }
+        return (isPositionEmpty(endXPos,endYPos)||isPositionEnemy(endXPos,endYPos,pieceAt(startXPos,startYPos).getPlayerColour()));
+
     }
     private void performMove(int startXPos,int startYPos,int endXPos,int endYPos) {
         placePiece(pieceAt(startXPos,startYPos),endXPos,endYPos);
@@ -48,9 +74,6 @@ public class ChessBoard {
 
 
     private boolean isMoveValidPawn(int startXPos,int startYPos,int endXPos, int endYPos) {
-        if(!checkPositionIsOnBoard(startXPos, startYPos) || !checkPositionIsOnBoard(endXPos,endYPos)){
-            return false;
-        }
         switch (pieceAt(startXPos, startYPos).getPlayerColour()) {
             case 'W':
                 return isMoveValidPawnColour(startXPos, startYPos, endXPos, endYPos,1);
