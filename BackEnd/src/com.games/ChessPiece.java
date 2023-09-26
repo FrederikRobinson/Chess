@@ -13,4 +13,7 @@ public class ChessPiece {
     public char getPlayerColour(){
         return PLAYER_COLOUR;
     }
+    public boolean isEqual(ChessPiece otherPiece){
+        return (this.getPlayerColour()==otherPiece.getPlayerColour() && this.getPieceType()==otherPiece.getPieceType());
+    }
 }
