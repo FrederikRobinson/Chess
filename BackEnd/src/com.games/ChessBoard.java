@@ -5,18 +5,21 @@ import java.time.Year;
 public class ChessBoard {
     private final ChessPiece[][] BOARD = new ChessPiece[8][8];
     private final ChessPiece EMPTY_PIECE = new ChessPiece('X','X');
+    public ChessPiece getEmptyPiece(){
+        return EMPTY_PIECE;
+    }
     public ChessBoard(){
         setBoard();
     }
     private void setBoard(){
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                BOARD[i][j]=new ChessPiece('X','X');
+                BOARD[i][j]=EMPTY_PIECE;
             }
         }
     }
     public boolean placePiece(ChessPiece piece,int xPos,int yPos){
-        if (xPos>=0 && yPos>=0 && xPos<8 && yPos<8){
+        if (checkPositionIsOnBoard(xPos,yPos)){
         BOARD[xPos][yPos]=piece;
         return true;
         }
@@ -38,33 +41,74 @@ public class ChessBoard {
 
         return false;
     }
-    public void performMove(int startXPos,int startYPos,int endXPos,int endYPos) {
+    private void performMove(int startXPos,int startYPos,int endXPos,int endYPos) {
         placePiece(pieceAt(startXPos,startYPos),endXPos,endYPos);
         placePiece(EMPTY_PIECE,startXPos,startYPos);
 }
 
 
-    public boolean isMoveValidPawn(int startXPos,int startYPos,int endXPos, int endYPos){
-        if (startXPos!=endXPos){
+    private boolean isMoveValidPawn(int startXPos,int startYPos,int endXPos, int endYPos) {
+        if(!checkPositionIsOnBoard(startXPos, startYPos) || !checkPositionIsOnBoard(endXPos,endYPos)){
             return false;
         }
-        if(pieceAt(startXPos,startYPos).getPlayerColour()=='W') {
-            if ((startYPos + 1) == endYPos) {
-                return true;
-            }
-            if (endYPos == 3) {
-                return true;
-            }
+        switch (pieceAt(startXPos, startYPos).getPlayerColour()) {
+            case 'W':
+                return isMoveValidPawnColour(startXPos, startYPos, endXPos, endYPos,1);
+            case 'B':
+                return isMoveValidPawnColour(startXPos, startYPos, endXPos, endYPos,-1);
+            default:
+                return false;
         }
-        else if(pieceAt(startXPos,startYPos).getPlayerColour()=='B'){
-            if ((startYPos - 1) == endYPos) {
-                return true;
-            }
-            if (endYPos == 4) {
-                return true;
-            }
+    }
+
+    private boolean checkPositionIsOnBoard(int xPos,int yPos){
+        return (xPos>=0 && yPos>=0 && xPos<8 && yPos<8);
+    }
+    private boolean isPositionEmpty(int xPos,int yPos){
+        return (pieceAt(xPos,yPos).isEqual(EMPTY_PIECE));
+    }
+    private boolean isPositionEnemy(int xPos,int yPos,char playerColour){
+        return pieceAt(xPos,yPos).getPlayerColour()!=playerColour;
+    }
+    private boolean isPositionEnemy(int xPos,int yPos,int direction){
+        if (direction==1){
+            return isPositionEnemy(xPos,yPos,'W');
+        }
+        if (direction==-1){
+            return isPositionEnemy(xPos,yPos,'B');
+        }
+        return true;
+    }
+    private boolean isMoveValidPawnColour(int startXPos,int startYPos,int endXPos, int endYPos,int direction) {
+        if (startXPos == endXPos) {
+            return isMoveValidPawnForward(startXPos, startYPos, endXPos, endYPos, direction);
+        }
+        if (startXPos == endXPos + 1 || startXPos == endXPos - 1) {
+            return isMoveValidPawnAttack(startXPos, startYPos, endXPos, endYPos, direction);
         }
         return false;
-
     }
+
+    private boolean isMoveValidPawnForward(int startXPos,int startYPos,int endXPos, int endYPos,int direction) {
+        if (endYPos == startYPos + direction) {
+            return isPositionEmpty(endXPos, endYPos);
+        }
+        if (endYPos == startYPos + 2 * direction && isPawnOnFirstRow(startYPos,direction)) {
+            return (isPositionEmpty(endXPos, endYPos) && isPositionEmpty(startXPos, startYPos + direction));
+        }
+        return false;
+    }
+    private boolean isPawnOnFirstRow(int yPos,int direction){
+        if (direction==1 && yPos==1){
+            return true;
+        }
+        if (direction==-1 && yPos==6){
+            return true;
+        }
+        return false;
+    }
+    private boolean isMoveValidPawnAttack(int startXPos,int startYPos,int endXPos, int endYPos,int direction) {
+
+    return isPositionEnemy(endXPos,endYPos,direction);}
+
 }
