@@ -48,11 +48,21 @@ public class ChessBoard {
         if (startXPos!=endXPos){
             return false;
         }
-        if ((startYPos+1)==endYPos){
-            return true;
+        if(pieceAt(startXPos,startYPos).getPlayerColour()=='W') {
+            if ((startYPos + 1) == endYPos) {
+                return true;
+            }
+            if (endYPos == 3) {
+                return true;
+            }
         }
-        if ((startYPos+2)==endYPos && startYPos==1){
-            return true;
+        else if(pieceAt(startXPos,startYPos).getPlayerColour()=='B'){
+            if ((startYPos - 1) == endYPos) {
+                return true;
+            }
+            if (endYPos == 4) {
+                return true;
+            }
         }
         return false;
 

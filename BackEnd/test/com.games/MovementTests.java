@@ -24,21 +24,21 @@ public class MovementTests {
     public void PlaceOffBoardReturnsFalse(){
         ChessBoard testBoard = new ChessBoard();
         ChessPiece testPawn = new ChessPiece('P','W');
-        assertEquals(false,testBoard.placePiece(testPawn,-1,0));
-        assertEquals(false,testBoard.placePiece(testPawn,0,-1));
-        assertEquals(false,testBoard.placePiece(testPawn,8,0));
-        assertEquals(false,testBoard.placePiece(testPawn,0,8));
+        assertFalse(testBoard.placePiece(testPawn,-1,0));
+        assertFalse(testBoard.placePiece(testPawn,0,-1));
+        assertFalse(testBoard.placePiece(testPawn,8,0));
+        assertFalse(testBoard.placePiece(testPawn,0,8));
     }
     @Test
     public void PlaceOnBoardReturnsTrue(){
         ChessBoard testBoard = new ChessBoard();
         ChessPiece testPawn = new ChessPiece('P','W');
-        assertEquals(true,testBoard.placePiece(testPawn,0,0));
-        assertEquals(true,testBoard.placePiece(testPawn,7,7));
-        assertEquals(true,testBoard.placePiece(testPawn,0,7));
-        assertEquals(true,testBoard.placePiece(testPawn,7,0));
-        assertEquals(true,testBoard.placePiece(testPawn,2,4));
-        assertEquals(true,testBoard.placePiece(testPawn,6,3));
+        assertTrue(testBoard.placePiece(testPawn,0,0));
+        assertTrue(testBoard.placePiece(testPawn,7,7));
+        assertTrue(testBoard.placePiece(testPawn,0,7));
+        assertTrue(testBoard.placePiece(testPawn,7,0));
+        assertTrue(testBoard.placePiece(testPawn,2,4));
+        assertTrue(testBoard.placePiece(testPawn,6,3));
     }
 
     @Test
@@ -73,6 +73,40 @@ public class MovementTests {
         testBoard.movePiece(0,2,0,4);
         assertNotEquals(testPawn,testBoard.pieceAt(0,4));
     }
+    @Test
+    public void MovingBlackPawnOneSpaceDownIsValid(){
+        ChessBoard testBoard = new ChessBoard();
+        ChessPiece testPawn = new ChessPiece('P','B');
+        testBoard.placePiece(testPawn,0,6);
+        testBoard.movePiece(0,6,0,5);
+        assertEquals(testPawn,testBoard.pieceAt(0,5));
+    }
+    @Test
+    public void MovingBlackPawnTwoSpaceDownFromStartIsValid(){
+        ChessBoard testBoard = new ChessBoard();
+        ChessPiece testPawn = new ChessPiece('P','B');
+        testBoard.placePiece(testPawn,0,6);
+        testBoard.movePiece(0,6,0,4);
+        assertEquals(testPawn,testBoard.pieceAt(0,4));
+    }
+    @Test
+    public void MovingBlackPawnOneSpaceUpIsInvalid(){
+        ChessBoard testBoard = new ChessBoard();
+        ChessPiece testPawn = new ChessPiece('P','B');
+        testBoard.placePiece(testPawn,0,6);
+        testBoard.movePiece(0,6,0,7);
+        assertNotEquals(testPawn,testBoard.pieceAt(0,7));
+    }
+    @Test
+    public void MovingBlackPawnTwoSpaceDownElsewhereIsInvalid(){
+        ChessBoard testBoard = new ChessBoard();
+        ChessPiece testPawn = new ChessPiece('P','B');
+        testBoard.placePiece(testPawn,0,5);
+        testBoard.movePiece(0,5,0,3);
+        assertNotEquals(testPawn,testBoard.pieceAt(0,3));
+    }
+
+
     @Test
     public void PieceIsNoLongerAtStartingPositionAfterMove(){
         ChessBoard testBoard = new ChessBoard();
