@@ -43,11 +43,22 @@ public class ChessBoard {
                     performMove(startXPos,startYPos,endXPos,endYPos);
                     return true;
                 }
+            case 'B':
+                if(isMoveValidBishop(startXPos,startYPos,endXPos,endYPos)){
+                    performMove(startXPos,startYPos,endXPos,endYPos);
+                    return true;
+                }
         }
 
         return false;
     }
 
+    private boolean isMoveValidBishop(int startXPos,int startYPos,int endXPos,int endYPos){
+        if (Math.abs(startXPos-endXPos)!=Math.abs(startYPos-endYPos)){
+            return false;
+        }
+        return isMoveValidStraightLine(startXPos,startYPos,endXPos,endYPos);
+    }
     private boolean isMoveValidRook(int startXPos,int startYPos,int endXPos,int endYPos){
         if (startXPos!=endXPos && startYPos!=endYPos){
             return false;
