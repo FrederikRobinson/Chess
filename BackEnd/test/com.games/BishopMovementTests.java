@@ -123,31 +123,64 @@ public class BishopMovementTests {
         assertEquals(emptyPiece, testBoard.pieceAt(7, 4));
     }
     @Test
-    public void WhiteCannotTakeAllies(){
+    public void WhiteBishopCannotTakeAllies(){
         testBoard.placePiece(testBishopWhite,4,1);
         testBoard.placePiece(testBishopWhite,6,3);
         testBoard.movePiece(4,1,6,3);
         assertEquals(testBishopWhite, testBoard.pieceAt(4, 1));
     }
     @Test
-    public void BlackCannotTakeAllies(){
+    public void BlackBishopCannotTakeAllies(){
         testBoard.placePiece(testBishopBlack,4,1);
         testBoard.placePiece(testBishopBlack,6,3);
         testBoard.movePiece(4,1,6,3);
         assertEquals(testBishopBlack, testBoard.pieceAt(4, 1));
     }
     @Test
-    public void WhiteCanTakeEnemies(){
+    public void WhiteBishopCanTakeEnemies(){
         testBoard.placePiece(testBishopWhite,4,1);
         testBoard.placePiece(testBishopBlack,6,3);
         testBoard.movePiece(4,1,6,3);
         assertEquals(testBishopWhite, testBoard.pieceAt(6, 3));
     }
     @Test
-    public void BlackCanTakeEnemies(){
+    public void BlackBishopCanTakeEnemies(){
         testBoard.placePiece(testBishopBlack,4,1);
         testBoard.placePiece(testBishopWhite,6,3);
         testBoard.movePiece(4,1,6,3);
         assertEquals(testBishopBlack, testBoard.pieceAt(6, 3));
+    }
+
+    @Test
+    public void WhiteBishopInvalidMoves(){
+        testBoard.placePiece(testBishopWhite,3,3);
+        testBoard.movePiece(3,3,4,5);
+        testBoard.movePiece(3,3,5,3);
+        testBoard.movePiece(3,3,2,1);
+        testBoard.movePiece(3,3,3,1);
+        testBoard.movePiece(3,3,0,7);
+        testBoard.movePiece(3,3,7,0);
+        assertEquals(emptyPiece,testBoard.pieceAt(4,5));
+        assertEquals(emptyPiece,testBoard.pieceAt(5,3));
+        assertEquals(emptyPiece,testBoard.pieceAt(2,1));
+        assertEquals(emptyPiece,testBoard.pieceAt(3,1));
+        assertEquals(emptyPiece,testBoard.pieceAt(0,7));
+        assertEquals(emptyPiece,testBoard.pieceAt(7,0));
+    }
+    @Test
+    public void BlackBishopInvalidMoves(){
+        testBoard.placePiece(testBishopBlack,3,3);
+        testBoard.movePiece(3,3,4,5);
+        testBoard.movePiece(3,3,5,3);
+        testBoard.movePiece(3,3,2,1);
+        testBoard.movePiece(3,3,3,1);
+        testBoard.movePiece(3,3,0,7);
+        testBoard.movePiece(3,3,7,0);
+        assertEquals(emptyPiece,testBoard.pieceAt(4,5));
+        assertEquals(emptyPiece,testBoard.pieceAt(5,3));
+        assertEquals(emptyPiece,testBoard.pieceAt(2,1));
+        assertEquals(emptyPiece,testBoard.pieceAt(3,1));
+        assertEquals(emptyPiece,testBoard.pieceAt(0,7));
+        assertEquals(emptyPiece,testBoard.pieceAt(7,0));
     }
 }
