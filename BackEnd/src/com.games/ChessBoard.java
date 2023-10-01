@@ -38,21 +38,25 @@ public class ChessBoard {
                     performMove(startXPos, startYPos, endXPos, endYPos);
                     return true;
                 }
+                break;
             case 'R':
                 if (isMoveValidRook(startXPos,startYPos,endXPos,endYPos)){
                     performMove(startXPos,startYPos,endXPos,endYPos);
                     return true;
                 }
+                break;
             case 'B':
                 if(isMoveValidBishop(startXPos,startYPos,endXPos,endYPos)){
                     performMove(startXPos,startYPos,endXPos,endYPos);
                     return true;
                 }
+                break;
             case 'Q':
                 if(isMoveValidQueen(startXPos,startYPos,endXPos,endYPos)){
                     performMove(startXPos,startYPos,endXPos,endYPos);
                     return true;
                 }
+                break;
         }
 
         return false;
