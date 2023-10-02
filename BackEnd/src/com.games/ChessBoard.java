@@ -69,6 +69,8 @@ public class ChessBoard {
                     return true;
                 }
                 break;
+            case 'X':
+                return false;
         }
 
         return false;
