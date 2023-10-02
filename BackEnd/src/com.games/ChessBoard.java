@@ -63,11 +63,22 @@ public class ChessBoard {
                     return true;
                 }
                 break;
+            case 'N':
+                if(isMoveValidKnight(startXPos,startYPos,endXPos,endYPos)){
+                    performMove(startXPos,startYPos,endXPos,endYPos);
+                    return true;
+                }
+                break;
         }
 
         return false;
     }
-
+private boolean isMoveValidKnight(int startXPos,int startYPos,int endXPos,int endYPos){
+        if((Math.abs(startXPos-endXPos)==1 && Math.abs(startYPos-endYPos)==2) ||(Math.abs(startXPos-endXPos)==2 && Math.abs(startYPos-endYPos)==1)){
+            return (isPositionEnemy(endXPos,endYPos,pieceAt(startXPos,startYPos).getPlayerColour())||isPositionEmpty(endXPos,endYPos));
+        }
+        return false;
+}
     private boolean isMoveValidKing(int startXPos,int startYPos,int endXPos,int endYPos){
         if(Math.abs(startXPos-endXPos)>1 || Math.abs(startYPos-endYPos)>1){
             return false;
