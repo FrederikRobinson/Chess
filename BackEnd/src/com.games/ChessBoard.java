@@ -57,9 +57,22 @@ public class ChessBoard {
                     return true;
                 }
                 break;
+            case 'K':
+                if(isMoveValidKing(startXPos,startYPos,endXPos,endYPos)){
+                    performMove(startXPos,startYPos,endXPos,endYPos);
+                    return true;
+                }
+                break;
         }
 
         return false;
+    }
+
+    private boolean isMoveValidKing(int startXPos,int startYPos,int endXPos,int endYPos){
+        if(Math.abs(startXPos-endXPos)>1 || Math.abs(startYPos-endYPos)>1){
+            return false;
+        }
+        return isMoveValidStraightLine(startXPos,startYPos,endXPos,endYPos);
     }
 private boolean isMoveValidQueen(int startXPos,int startYPos,int endXPos,int endYPos){
         if(startXPos!=endXPos && startYPos!=endYPos && Math.abs(startXPos-endXPos)!=Math.abs(startYPos-endYPos)){
