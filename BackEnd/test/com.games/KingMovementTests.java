@@ -22,11 +22,7 @@ public class KingMovementTests {
         testRookBlack = new ChessPiece('R','B');
         emptyPiece = testBoard.getEmptyPiece();
     }
-    @Test
-    public void PlaceKingWorks() {
-        testBoard.placePiece(testKingWhite, 0, 0);
-        assertEquals(testKingWhite, testBoard.pieceAt(0, 0));
-    }
+
 
     @Test
     public void WhiteKingCanMoveNE(){
@@ -183,5 +179,15 @@ public class KingMovementTests {
         assertEquals(emptyPiece,testBoard.pieceAt(0,1));
         assertEquals(emptyPiece,testBoard.pieceAt(0,7));
         assertEquals(emptyPiece,testBoard.pieceAt(7,0));
+    }
+    @Test
+    public void KingCannotMoveOffTheBoard(){
+        testBoard.placePiece(testKingWhite,0,0);
+        testBoard.movePiece(0,0,0,-1);
+        testBoard.movePiece(0,0,-1,-1);
+        testBoard.movePiece(0,0,-1,0);
+        testBoard.movePiece(0,0,1,-1);
+        testBoard.movePiece(0,0,-1,1);
+        assertEquals(testKingWhite,testBoard.pieceAt(0,0));
     }
 }

@@ -32,4 +32,15 @@ public class CheckTests {
         testBoard.placePiece(testKingWhite,3,4);
         assertTrue(testBoard.isCheck('W'));
     }
+    @Test
+    public void NotInCheckIfNoKingOnBoard(){
+        assertFalse(testBoard.isCheck('W'));
+        assertFalse(testBoard.isCheck('B'));
+    }
+    @Test
+    public void AlliesCannotCauseCheck(){
+        testBoard.placePiece(testKingWhite,0,0);
+        testBoard.placePiece(testRookWhite,0,1);
+        assertFalse(testBoard.isCheck('W'));
+    }
 }

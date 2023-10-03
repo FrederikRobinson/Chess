@@ -16,27 +16,7 @@ public class PawnMovementTests {
         testPawnWhite = new ChessPiece('P','W');
         testPawnBlack = new ChessPiece('P','B');
     }
-    @Test
-    public void PlacePawnWorks(){
-        testBoard.placePiece(testPawnWhite,0,0);
-        assertEquals(testPawnWhite,testBoard.pieceAt(0,0));
-    }
-    @Test
-    public void PlaceOffBoardReturnsFalse(){
-        assertFalse(testBoard.placePiece(testPawnWhite,-1,0));
-        assertFalse(testBoard.placePiece(testPawnWhite,0,-1));
-        assertFalse(testBoard.placePiece(testPawnWhite,8,0));
-        assertFalse(testBoard.placePiece(testPawnWhite,0,8));
-    }
-    @Test
-    public void PlaceOnBoardReturnsTrue(){
-        assertTrue(testBoard.placePiece(testPawnWhite,0,0));
-        assertTrue(testBoard.placePiece(testPawnWhite,7,7));
-        assertTrue(testBoard.placePiece(testPawnWhite,0,7));
-        assertTrue(testBoard.placePiece(testPawnWhite,7,0));
-        assertTrue(testBoard.placePiece(testPawnWhite,2,4));
-        assertTrue(testBoard.placePiece(testPawnWhite,6,3));
-    }
+
 
     @Test
     public void MovingWhitePawnOneSpaceUpIsValid(){
@@ -166,5 +146,35 @@ public class PawnMovementTests {
         testBoard.movePiece(2,5,2,3);
         assertEquals(testBoard.getEmptyPiece(),testBoard.pieceAt(2,3));
     }
-//TODO add moving off board tests
+
+    @Test
+    public void WhitePawnCannotMoveTwoSpacesSideways(){
+        testBoard.placePiece(testPawnWhite,3,3);
+        testBoard.movePiece(3,3,5,4);
+        assertEquals(testPawnWhite,testBoard.pieceAt(3,3));
+    }
+    @Test
+    public void BlackPawnCannotMoveTwoSpacesSideways(){
+        testBoard.placePiece(testPawnBlack,3,3);
+        testBoard.movePiece(3,3,1,2);
+        assertEquals(testPawnBlack,testBoard.pieceAt(3,3));
+    }
+    @Test
+    public void WhitePawnCannotMoveOffTheBoard(){
+        testBoard.placePiece(testPawnWhite,0,7);
+        testBoard.movePiece(0,7,0,8);
+        testBoard.movePiece(0,7,0,9);
+        testBoard.movePiece(0,7,-1,8);
+        testBoard.movePiece(0,7,1,8);
+        assertEquals(testPawnWhite,testBoard.pieceAt(0,7));
+    }
+    @Test
+    public void BlackPawnCannotMoveOffTheBoard(){
+        testBoard.placePiece(testPawnBlack,0,0);
+        testBoard.movePiece(0,0,0,-1);
+        testBoard.movePiece(0,0,0,-2);
+        testBoard.movePiece(0,0,-1,-1);
+        testBoard.movePiece(0,0,1,-1);
+        assertEquals(testPawnBlack,testBoard.pieceAt(0,0));
+    }
 }

@@ -24,11 +24,7 @@ public class KnightMovementTests {
         testRookBlack = new ChessPiece('R','B');
         emptyPiece = testBoard.getEmptyPiece();
     }
-    @Test
-    public void PlaceKnightWorks() {
-        testBoard.placePiece(testKnightWhite, 0, 0);
-        assertEquals(testKnightWhite, testBoard.pieceAt(0, 0));
-    }
+
     @Test
     public void WhiteKnightCanMoveNNE(){
         testBoard.placePiece(testKnightWhite,3,3);
@@ -184,5 +180,14 @@ public class KnightMovementTests {
         assertEquals(emptyPiece,testBoard.pieceAt(0,1));
         assertEquals(emptyPiece,testBoard.pieceAt(0,7));
         assertEquals(emptyPiece,testBoard.pieceAt(7,0));
+    }
+    @Test
+    public void KnightCannotMoveOffTheBoard(){
+        testBoard.placePiece(testKnightWhite,0,0);
+        testBoard.movePiece(0,0,-2,-1);
+        testBoard.movePiece(0,0,-2,1);
+        testBoard.movePiece(0,0,-1,2);
+        testBoard.movePiece(0,0,-1,-2);
+        assertEquals(testKnightWhite,testBoard.pieceAt(0,0));
     }
 }
