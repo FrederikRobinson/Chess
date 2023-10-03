@@ -19,11 +19,7 @@ public class RookMovementTests {
         emptyPiece = testBoard.getEmptyPiece();
     }
 
-    @Test
-    public void PlaceRookWorks() {
-        testBoard.placePiece(testRookWhite, 0, 0);
-        assertEquals(testRookWhite, testBoard.pieceAt(0, 0));
-    }
+
 
     @Test
     public void WhiteRookMoveUpOneValid(){
@@ -166,6 +162,15 @@ public class RookMovementTests {
         testBoard.placePiece(testRookBlack,5,3);
         testBoard.movePiece(5,3,3,3);
         assertEquals(testRookBlack,testBoard.pieceAt(5,3));
+    }
+    @Test
+    public void RookCannotMoveOffTheBoard(){
+        testBoard.placePiece(testRookWhite,0,0);
+        testBoard.movePiece(0,0,-1,0);
+        testBoard.movePiece(0,0,0,-1);
+        testBoard.movePiece(0,0,8,0);
+        testBoard.movePiece(0,0,0,8);
+        assertEquals(testRookWhite,testBoard.pieceAt(0,0));
     }
 }
 

@@ -17,13 +17,7 @@ public class EmptyPieceTests {
         testRookBlack = new ChessPiece('R','B');
         emptyPiece = testBoard.getEmptyPiece();
     }
-    @Test
-    public void PlaceEmptyPieceWorks() {
-        testBoard.placePiece(testRookWhite, 0, 0);
-        assertEquals(testRookWhite, testBoard.pieceAt(0, 0));
-        testBoard.placePiece(emptyPiece,0,0);
-        assertEquals(emptyPiece, testBoard.pieceAt(0, 0));
-    }
+
     @Test
     public void EmptyPieceCannotCaptureWhite(){
         testBoard.placePiece(testRookWhite,5,5);

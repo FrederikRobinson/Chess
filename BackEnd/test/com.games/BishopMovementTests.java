@@ -18,11 +18,7 @@ public class BishopMovementTests {
         testBishopBlack = new ChessPiece('B','B');
         emptyPiece = testBoard.getEmptyPiece();
     }
-    @Test
-    public void PlaceBishopWorks() {
-        testBoard.placePiece(testBishopWhite, 0, 0);
-        assertEquals(testBishopWhite, testBoard.pieceAt(0, 0));
-    }
+
 
     @Test
     public void MoveWhiteBishopNEOneSpaceValid(){
@@ -182,5 +178,15 @@ public class BishopMovementTests {
         assertEquals(emptyPiece,testBoard.pieceAt(3,1));
         assertEquals(emptyPiece,testBoard.pieceAt(0,7));
         assertEquals(emptyPiece,testBoard.pieceAt(7,0));
+    }
+    @Test
+    public void BishopCannotMoveOffTheBoard(){
+        testBoard.placePiece(testBishopWhite,0,0);
+        testBoard.movePiece(0,0,-1,-1);
+        testBoard.movePiece(0,0,-1,1);
+        testBoard.movePiece(0,0,1,-1);
+        testBoard.movePiece(0,0,8,8);
+        testBoard.movePiece(0,0,100,100);
+        assertEquals(testBishopWhite,testBoard.pieceAt(0,0));
     }
 }
