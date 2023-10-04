@@ -144,10 +144,7 @@ private boolean isMoveValidQueen(int startXPos,int startYPos,int endXPos,int end
         return false;
     }
 private int getDirectionFromColour(char playerColour){
-        if (playerColour==WHITE){
-            return 1;
-        }
-        return -1;
+        return playerColour==WHITE ? 1 : -1;
 }
     private boolean isMoveValidPawnForward(int startXPos,int startYPos,int endXPos, int endYPos) {
         int direction = getDirectionFromColour(pieceAt(startXPos,startYPos).getPlayerColour());
@@ -202,4 +199,55 @@ public ChessPiece getPiece(char pieceType,char playerColour){
             default: return EMPTY_PIECE;
         }
 }
+public boolean isCheckmate(char playerColour){
+        if (!isCheck(playerColour)){
+            return false;
+        }
+    for (int xPos = 0; xPos < BOARD_SIZE_X; xPos++) {
+        for (int yPos = 0; yPos < BOARD_SIZE_Y; yPos++) {
+            if(isMoveAvailable(xPos,yPos,playerColour)){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+public boolean isStalemate(char playerColour){
+        if (isCheck(playerColour)){
+            return false;
+        }
+        for (int xPos = 0; xPos < BOARD_SIZE_X; xPos++) {
+            for (int yPos = 0; yPos < BOARD_SIZE_Y; yPos++) {
+                if(isMoveAvailable(xPos,yPos,playerColour)){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    private boolean isMoveAvailable(int startXPos,int startYPos, char playerColour){
+        if(pieceAt(startXPos,startYPos).getPlayerColour()!=playerColour){
+            return false;
+        }
+        for (int endXPos = 0; endXPos < BOARD_SIZE_X; endXPos++) {
+            for (int endYPos = 0; endYPos < BOARD_SIZE_Y; endYPos++) {
+                if(isMoveValid(startXPos,startYPos,endXPos,endYPos)&&!doesMoveCauseCheck(startXPos,startYPos,endXPos,endYPos)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    private boolean doesMoveCauseCheck(int startXPos,int startYPos,int endXPos, int endYPos){
+        ChessPiece startPiece = pieceAt(startXPos,startYPos);
+        ChessPiece endPiece = pieceAt(endXPos,endYPos);
+        boolean result= false;
+        movePiece(startXPos,startYPos,endXPos,endYPos);
+        if (isCheck(startPiece.getPlayerColour())){
+            result =true;
+        }
+        placePiece(startPiece,startXPos,startYPos);
+        placePiece(endPiece,endXPos,endYPos);
+        return result;
+    }
 }
