@@ -1,10 +1,12 @@
 import Tile from './Tile.jsx'
 import './Board.css';
-import { createBoard } from '../Utils/boardUtils.jsx'
+import { createBoard, emptyBoard } from '../Utils/boardUtils.jsx'
+import { useState } from 'react';
 
 
 const Board = () => {
-    const tiles = createBoard();
+    const [board, setBoard] = useState(emptyBoard);
+    const tiles = createBoard(board);
 
 
     return (
