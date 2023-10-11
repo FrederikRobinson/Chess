@@ -241,11 +241,8 @@ public boolean isStalemate(char playerColour){
     private boolean doesMoveCauseCheck(int startXPos,int startYPos,int endXPos, int endYPos){
         ChessPiece startPiece = pieceAt(startXPos,startYPos);
         ChessPiece endPiece = pieceAt(endXPos,endYPos);
-        boolean result= false;
-        movePiece(startXPos,startYPos,endXPos,endYPos);
-        if (isCheck(startPiece.getPlayerColour())){
-            result =true;
-        }
+        performMove(startXPos,startYPos,endXPos,endYPos);
+        boolean result = isCheck(startPiece.getPlayerColour());
         placePiece(startPiece,startXPos,startYPos);
         placePiece(endPiece,endXPos,endYPos);
         return result;
