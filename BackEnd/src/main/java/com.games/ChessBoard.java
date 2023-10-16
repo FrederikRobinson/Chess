@@ -1,21 +1,6 @@
 package com.games;
 
 public class ChessBoard {
-    private final ChessPiece[][] BOARD = new ChessPiece[8][8];
-    private final ChessPiece EMPTY_PIECE = new ChessPiece('X','X');
-    private final ChessPiece WHITE_KING = new ChessPiece('K','W');
-    private final ChessPiece BLACK_KING = new ChessPiece('K','B');
-    private final ChessPiece WHITE_ROOK = new ChessPiece('R','W');
-    private final ChessPiece BLACK_ROOK = new ChessPiece('R','B');
-    private final ChessPiece WHITE_QUEEN = new ChessPiece('Q','W');
-    private final ChessPiece BLACK_QUEEN = new ChessPiece('Q','B');
-    private final ChessPiece WHITE_PAWN = new ChessPiece('P','W');
-    private final ChessPiece BLACK_PAWN = new ChessPiece('P','B');
-    private final ChessPiece WHITE_BISHOP = new ChessPiece('B','W');
-    private final ChessPiece BLACK_BISHOP = new ChessPiece('B','B');
-    private final ChessPiece WHITE_KNIGHT = new ChessPiece('N','W');
-    private final ChessPiece BLACK_KNIGHT = new ChessPiece('N','B');
-
     private final char WHITE = 'W';
     private final char BLACK = 'B';
     private final char ROOK = 'R';
@@ -24,6 +9,24 @@ public class ChessBoard {
     private final char QUEEN = 'Q';
     private final char PAWN = 'P';
     private final char BISHOP = 'B';
+    private final char EMPTY = 'X';
+
+    private final ChessPiece[][] BOARD = new ChessPiece[8][8];
+    private final ChessPiece EMPTY_PIECE = new ChessPiece(EMPTY,EMPTY);
+    private final ChessPiece WHITE_KING = new ChessPiece(KING,WHITE);
+    private final ChessPiece BLACK_KING = new ChessPiece(KING,BLACK);
+    private final ChessPiece WHITE_ROOK = new ChessPiece(ROOK,WHITE);
+    private final ChessPiece BLACK_ROOK = new ChessPiece(ROOK,BLACK);
+    private final ChessPiece WHITE_QUEEN = new ChessPiece(QUEEN,WHITE);
+    private final ChessPiece BLACK_QUEEN = new ChessPiece(QUEEN,BLACK);
+    private final ChessPiece WHITE_PAWN = new ChessPiece(PAWN,WHITE);
+    private final ChessPiece BLACK_PAWN = new ChessPiece(PAWN,BLACK);
+    private final ChessPiece WHITE_BISHOP = new ChessPiece(BISHOP,WHITE);
+    private final ChessPiece BLACK_BISHOP = new ChessPiece(BISHOP,BLACK);
+    private final ChessPiece WHITE_KNIGHT = new ChessPiece(KNIGHT,WHITE);
+    private final ChessPiece BLACK_KNIGHT = new ChessPiece(KNIGHT,BLACK);
+
+
     private final int BOARD_SIZE_X = 8;
     private final int BOARD_SIZE_Y = 8;
     public ChessPiece getEmptyPiece(){
