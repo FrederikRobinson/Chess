@@ -66,5 +66,4 @@ public class StalemateTests {
         testBoard.placePiece(testRookBlack,1,5);
         assertFalse(testBoard.isStalemate('W'));
     }
-
 }

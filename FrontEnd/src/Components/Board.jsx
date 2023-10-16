@@ -14,14 +14,15 @@ const Board = () => {
 
 
     //<Tile xPos={xPos} yPos={yPos} piece={piece} key={`${xPos} ${yPos}`} / >
-    useEffect(() => {
-        setBoard
-    }, [])
+    // useEffect(() => {
+    //     setBoard
+    // }, [])
 
     const handleMakeMove = async (startXPos, startYPos, endXPos, endYPos, playerColour, gameId) => {
         try {
             const res = await makeMove(startXPos, startYPos, endXPos, endYPos, playerColour, gameId);
-            setBoard(res);
+            console.dir(res);
+            setBoard(res.content);
             setSelectedTile([-1, -1]);
             setCurrentPlayer(nextPlayer(currentPlayer));
         }
