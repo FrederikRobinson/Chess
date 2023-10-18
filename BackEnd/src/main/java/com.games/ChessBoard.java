@@ -11,6 +11,7 @@ public class ChessBoard {
     private final char BISHOP = 'B';
     private final char EMPTY = 'X';
 
+    private final char[] PIECE_ORDER = {ROOK,KNIGHT,BISHOP,QUEEN,KING,BISHOP,KNIGHT,ROOK};
     private final ChessPiece[][] BOARD = new ChessPiece[8][8];
     private final ChessPiece EMPTY_PIECE = new ChessPiece(EMPTY,EMPTY);
     private final ChessPiece WHITE_KING = new ChessPiece(KING,WHITE);
@@ -29,19 +30,33 @@ public class ChessBoard {
 
     private final int BOARD_SIZE_X = 8;
     private final int BOARD_SIZE_Y = 8;
-    public ChessPiece getEmptyPiece(){
-        return EMPTY_PIECE;
-    }
+
     public ChessBoard(){
         setBoard();
     }
     private void setBoard(){
         for (int x = 0; x < BOARD_SIZE_X; x++) {
-            for (int y = 0; y < BOARD_SIZE_Y; y++) {
-                BOARD[x][y]=EMPTY_PIECE;
-            }
+            setColumn(x);
         }
     }
+    private void setColumn(int columnNumber){
+        SetPieces(columnNumber);
+        setEmptySpaces(columnNumber);
+    }
+
+    private void SetPieces( int columnNumber) {
+        placePiece(getPiece(PIECE_ORDER[columnNumber],WHITE), columnNumber,0);
+        placePiece(getPiece(PAWN,WHITE), columnNumber,1);
+        placePiece(getPiece(PAWN,BLACK), columnNumber,6);
+        placePiece(getPiece(PIECE_ORDER[columnNumber],BLACK), columnNumber,7);
+    }
+
+    private void setEmptySpaces(int columnNumber) {
+        for (int y = 2; y <BOARD_SIZE_Y-2 ; y++) {
+            placePiece(getPiece(EMPTY,EMPTY), columnNumber,y);
+        }
+    }
+
     public boolean placePiece(ChessPiece piece,int xPos,int yPos){
         if (checkPositionIsOnBoard(xPos,yPos)){
         BOARD[xPos][yPos]=piece;
@@ -53,34 +68,29 @@ public class ChessBoard {
         return BOARD[xPos][yPos];
     }
 
-    public void movePiece(int startXPos,int startYPos,int endXPos,int endYPos){
+    public boolean movePiece(int startXPos,int startYPos,int endXPos,int endYPos){
         if (isMoveValid(startXPos,startYPos,endXPos,endYPos)){
             performMove(startXPos, startYPos, endXPos, endYPos);
+            return true;
         }
+        return false;
     }
 
     public boolean isMoveValid(int startXPos,int startYPos,int endXPos,int endYPos){
         if(!checkPositionIsOnBoard(startXPos, startYPos) || !checkPositionIsOnBoard(endXPos,endYPos)){
             return false;
         }
-        switch (pieceAt(startXPos,startYPos).getPieceType()) {
-            case PAWN:
-                return isMoveValidPawn(startXPos, startYPos, endXPos, endYPos);
-            case ROOK:
-                return isMoveValidRook(startXPos,startYPos,endXPos,endYPos);
-            case BISHOP:
-                return isMoveValidBishop(startXPos,startYPos,endXPos,endYPos);
-            case QUEEN:
-                return isMoveValidQueen(startXPos,startYPos,endXPos,endYPos);
-            case KING:
-                return isMoveValidKing(startXPos,startYPos,endXPos,endYPos);
-            case KNIGHT:
-                return isMoveValidKnight(startXPos,startYPos,endXPos,endYPos);
-            default:
-                return false;
-        }
+        return switch (pieceAt(startXPos, startYPos).getPieceType()) {
+            case PAWN -> isMoveValidPawn(startXPos, startYPos, endXPos, endYPos);
+            case ROOK -> isMoveValidRook(startXPos, startYPos, endXPos, endYPos);
+            case BISHOP -> isMoveValidBishop(startXPos, startYPos, endXPos, endYPos);
+            case QUEEN -> isMoveValidQueen(startXPos, startYPos, endXPos, endYPos);
+            case KING -> isMoveValidKing(startXPos, startYPos, endXPos, endYPos);
+            case KNIGHT -> isMoveValidKnight(startXPos, startYPos, endXPos, endYPos);
+            default -> false;
+        };
     }
-private boolean isMoveValidKnight(int startXPos,int startYPos,int endXPos,int endYPos){
+    private boolean isMoveValidKnight(int startXPos,int startYPos,int endXPos,int endYPos){
         if((Math.abs(startXPos-endXPos)==1 && Math.abs(startYPos-endYPos)==2) ||(Math.abs(startXPos-endXPos)==2 && Math.abs(startYPos-endYPos)==1)){
             return (isPositionEnemy(endXPos,endYPos,pieceAt(startXPos,startYPos).getPlayerColour())||isPositionEmpty(endXPos,endYPos));
         }
@@ -92,7 +102,7 @@ private boolean isMoveValidKnight(int startXPos,int startYPos,int endXPos,int en
         }
         return isMoveValidStraightLine(startXPos,startYPos,endXPos,endYPos);
     }
-private boolean isMoveValidQueen(int startXPos,int startYPos,int endXPos,int endYPos){
+    private boolean isMoveValidQueen(int startXPos,int startYPos,int endXPos,int endYPos){
         if(startXPos!=endXPos && startYPos!=endYPos && Math.abs(startXPos-endXPos)!=Math.abs(startYPos-endYPos)){
             return false;
         }
@@ -146,7 +156,7 @@ private boolean isMoveValidQueen(int startXPos,int startYPos,int endXPos,int end
         }
         return false;
     }
-private int getDirectionFromColour(char playerColour){
+    private int getDirectionFromColour(char playerColour){
         return playerColour==WHITE ? 1 : -1;
 }
     private boolean isMoveValidPawnForward(int startXPos,int startYPos,int endXPos, int endYPos) {
@@ -165,7 +175,7 @@ private int getDirectionFromColour(char playerColour){
     private boolean isMoveValidPawnAttack(int endXPos, int endYPos,char playerColour) {
 
     return isPositionEnemy(endXPos,endYPos,playerColour);}
-public boolean isCheck(char playerColour){
+    public boolean isCheck(char playerColour){
         int[] kingLocation= getKingLocation(playerColour);
         if (kingLocation[0]==-1) return false;
     for (int xPos = 0; xPos < BOARD_SIZE_X; xPos++) {
@@ -177,7 +187,7 @@ public boolean isCheck(char playerColour){
     }
     return false;
 }
-private int[] getKingLocation(char playerColour){
+    private int[] getKingLocation(char playerColour){
     for (int xPos = 0; xPos < BOARD_SIZE_X; xPos++) {
         for (int yPos = 0; yPos < BOARD_SIZE_Y; yPos++) {
             if(checkIfKing(xPos,yPos,playerColour)){
@@ -188,21 +198,21 @@ private int[] getKingLocation(char playerColour){
     return new int[] {-1,-1};
 }
 
-private boolean checkIfKing(int xPos,int yPos, char playerColour){
+    private boolean checkIfKing(int xPos,int yPos, char playerColour){
         return pieceAt(xPos,yPos).isEqual(getPiece(KING,playerColour));
 }
-public ChessPiece getPiece(char pieceType,char playerColour){
-        switch (pieceType){
-            case PAWN: return playerColour==WHITE ? WHITE_PAWN:BLACK_PAWN;
-            case QUEEN: return playerColour==WHITE ? WHITE_QUEEN:BLACK_QUEEN;
-            case KING: return playerColour==WHITE ? WHITE_KING:BLACK_KING;
-            case ROOK: return playerColour==WHITE ? WHITE_ROOK:BLACK_ROOK;
-            case KNIGHT: return playerColour==WHITE ? WHITE_KNIGHT:BLACK_KNIGHT;
-            case BISHOP: return playerColour==WHITE ? WHITE_BISHOP:BLACK_BISHOP;
-            default: return EMPTY_PIECE;
-        }
+    public ChessPiece getPiece(char pieceType,char playerColour){
+    return switch (pieceType) {
+        case PAWN -> playerColour == WHITE ? WHITE_PAWN : BLACK_PAWN;
+        case QUEEN -> playerColour == WHITE ? WHITE_QUEEN : BLACK_QUEEN;
+        case KING -> playerColour == WHITE ? WHITE_KING : BLACK_KING;
+        case ROOK -> playerColour == WHITE ? WHITE_ROOK : BLACK_ROOK;
+        case KNIGHT -> playerColour == WHITE ? WHITE_KNIGHT : BLACK_KNIGHT;
+        case BISHOP -> playerColour == WHITE ? WHITE_BISHOP : BLACK_BISHOP;
+        default -> EMPTY_PIECE;
+    };
 }
-public boolean isCheckmate(char playerColour){
+    public boolean isCheckmate(char playerColour){
         if (!isCheck(playerColour)){
             return false;
         }
@@ -215,7 +225,7 @@ public boolean isCheckmate(char playerColour){
     }
     return true;
 }
-public boolean isStalemate(char playerColour){
+    public boolean isStalemate(char playerColour){
         if (isCheck(playerColour)){
             return false;
         }

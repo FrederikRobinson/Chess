@@ -21,7 +21,7 @@ public class CheckmateTests {
         testRookWhite = new ChessPiece('R','W');
         testRookBlack = new ChessPiece('R','B');
         testBishopWhite = new ChessPiece('B','W');
-        emptyPiece = testBoard.getEmptyPiece();
+        emptyPiece = testBoard.getPiece('X','X');
     }
     @Test
     public void NotCheckmateIfBoardEmpty(){

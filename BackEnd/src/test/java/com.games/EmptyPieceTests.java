@@ -15,7 +15,7 @@ public class EmptyPieceTests {
         testBoard = new ChessBoard();
         testRookWhite = new ChessPiece('R','W');
         testRookBlack = new ChessPiece('R','B');
-        emptyPiece = testBoard.getEmptyPiece();
+        emptyPiece = testBoard.getPiece('X','X');
     }
 
     @Test
