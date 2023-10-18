@@ -22,7 +22,7 @@ public class KnightMovementTests {
         testKnightBlack = new ChessPiece('N','B');
         testRookWhite = new ChessPiece('R','W');
         testRookBlack = new ChessPiece('R','B');
-        emptyPiece = testBoard.getEmptyPiece();
+        emptyPiece = testBoard.getPiece('X','X');
     }
 
     @Test

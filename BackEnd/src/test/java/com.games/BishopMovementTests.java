@@ -16,7 +16,7 @@ public class BishopMovementTests {
         testBoard = new ChessBoard();
         testBishopWhite = new ChessPiece('B','W');
         testBishopBlack = new ChessPiece('B','B');
-        emptyPiece = testBoard.getEmptyPiece();
+        emptyPiece = testBoard.getPiece('X','X');
     }
 
 

@@ -35,7 +35,7 @@ public class PlaceAndGetMethodTests {
         testBishopBlack = new ChessPiece('B','B');
         testRookWhite = new ChessPiece('R','W');
         testRookBlack = new ChessPiece('R','B');
-        emptyPiece = testBoard.getEmptyPiece();
+        emptyPiece = testBoard.getPiece('X','X');
     }
 
     @Test

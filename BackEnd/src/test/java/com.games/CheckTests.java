@@ -19,7 +19,7 @@ public class CheckTests {
         testKingBlack = new ChessPiece('K','B');
         testRookWhite = new ChessPiece('R','W');
         testRookBlack = new ChessPiece('R','B');
-        emptyPiece = testBoard.getEmptyPiece();
+        emptyPiece = testBoard.getPiece('X','X');
     }
     @Test
     public void AKingOnAnEmptyBoardIsNotCheckInCheck(){

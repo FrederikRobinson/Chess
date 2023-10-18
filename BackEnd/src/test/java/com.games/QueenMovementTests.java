@@ -20,7 +20,7 @@ public class QueenMovementTests {
         testBoard = new ChessBoard();
         testQueenWhite = new ChessPiece('Q','W');
         testQueenBlack = new ChessPiece('Q','B');
-        emptyPiece = testBoard.getEmptyPiece();
+        emptyPiece = testBoard.getPiece('X','X');
     }
 
 

@@ -10,11 +10,13 @@ public class PawnMovementTests {
     ChessBoard testBoard;
     ChessPiece testPawnWhite;
     ChessPiece testPawnBlack;
+    ChessPiece emptyPiece;
     @BeforeEach
     public void setUp(){
         testBoard = new ChessBoard();
         testPawnWhite = new ChessPiece('P','W');
         testPawnBlack = new ChessPiece('P','B');
+        emptyPiece = testBoard.getPiece('X','X');
     }
 
 
@@ -137,14 +139,14 @@ public class PawnMovementTests {
         testBoard.placePiece(testPawnWhite,2,3);
         testBoard.placePiece(testPawnBlack,2,4);
         testBoard.movePiece(2,3,2,5);
-        assertEquals(testBoard.getEmptyPiece(),testBoard.pieceAt(2,5));
+        assertEquals(testBoard.getPiece('X','X'),testBoard.pieceAt(2,5));
     }
     @Test
     public void MovingBlackPawnForwardTwoOnOverOtherPieceInvalid(){
         testBoard.placePiece(testPawnWhite,2,4);
         testBoard.placePiece(testPawnBlack,2,5);
         testBoard.movePiece(2,5,2,3);
-        assertEquals(testBoard.getEmptyPiece(),testBoard.pieceAt(2,3));
+        assertEquals(testBoard.getPiece('X','X'),testBoard.pieceAt(2,3));
     }
 
     @Test
@@ -176,5 +178,74 @@ public class PawnMovementTests {
         testBoard.movePiece(0,0,-1,-1);
         testBoard.movePiece(0,0,1,-1);
         assertEquals(testPawnBlack,testBoard.pieceAt(0,0));
+    }
+    @Test
+    public void EnPassantIsValidForWhiteFromLeft(){
+        testBoard.placePiece(testPawnBlack,4,6);
+        testBoard.placePiece(testPawnWhite,3,4);
+        testBoard.movePiece(4,6,4,4);
+        testBoard.movePiece(3,4,4,5);
+        assertEquals(testPawnWhite,testBoard.pieceAt(4,5));
+        assertEquals(emptyPiece,testBoard.pieceAt(4,4));
+
+    }
+    @Test
+    public void EnPassantIsValidForWhiteFromRight(){
+        testBoard.placePiece(testPawnBlack,4,6);
+        testBoard.placePiece(testPawnWhite,5,4);
+        testBoard.movePiece(4,6,4,4);
+        testBoard.movePiece(5,4,4,5);
+        assertEquals(testPawnWhite,testBoard.pieceAt(4,5));
+        assertEquals(emptyPiece,testBoard.pieceAt(4,4));
+
+    }
+    @Test
+    public void EnPassantIsValidForBlackFromRight(){
+        testBoard.placePiece(testPawnBlack,4,3);
+        testBoard.placePiece(testPawnWhite,3,1);
+        testBoard.movePiece(3,1,3,3);
+        testBoard.movePiece(4,3,3,2);
+        assertEquals(testPawnBlack,testBoard.pieceAt(3,2));
+        assertEquals(emptyPiece,testBoard.pieceAt(3,3));
+
+    }
+    @Test
+    public void EnPassantIsValidForBlackFromLeft(){
+        testBoard.placePiece(testPawnBlack,2,3);
+        testBoard.placePiece(testPawnWhite,3,1);
+        testBoard.movePiece(3,1,3,3);
+        testBoard.movePiece(2,3,3,2);
+        assertEquals(testPawnBlack,testBoard.pieceAt(3,2));
+        assertEquals(emptyPiece,testBoard.pieceAt(3,3));
+
+    }
+    @Test
+    public void EnPassantPossibleForASingleStepWhite(){
+        testBoard.placePiece(testPawnBlack,4,5);
+        testBoard.placePiece(testPawnWhite,5,4);
+        testBoard.movePiece(4,5,4,4);
+        testBoard.movePiece(5,4,4,5);
+        assertEquals(testPawnWhite,testBoard.pieceAt(5,4));
+        assertEquals(testPawnBlack,testBoard.pieceAt(4,4));
+
+    }
+    @Test
+    public void EnPassantPossibleForASingleStepBlack(){
+        testBoard.placePiece(testPawnBlack,4,3);
+        testBoard.placePiece(testPawnWhite,5,2);
+        testBoard.movePiece(5,2,5,3);
+        testBoard.movePiece(4,2,5,3);
+        assertEquals(testPawnWhite,testBoard.pieceAt(5,3));
+        assertEquals(testPawnBlack,testBoard.pieceAt(4,2));
+    }
+    @Test
+    public void EnPassantIsInvalidAfterATurnForWhite(){
+        testBoard.placePiece(testPawnBlack,4,6);
+        testBoard.placePiece(testPawnWhite,5,4);
+        testBoard.movePiece(4,6,4,4);
+        testBoard.movePiece(5,4,4,5);
+        assertEquals(testPawnWhite,testBoard.pieceAt(4,5));
+        assertEquals(emptyPiece,testBoard.pieceAt(4,4));
+
     }
 }
