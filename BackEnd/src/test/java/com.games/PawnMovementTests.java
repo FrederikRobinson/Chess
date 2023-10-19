@@ -220,7 +220,7 @@ public class PawnMovementTests {
 
     }
     @Test
-    public void EnPassantPossibleForASingleStepWhite(){
+    public void EnPassantImpossibleForASingleStepWhite(){
         testBoard.placePiece(testPawnBlack,4,5);
         testBoard.placePiece(testPawnWhite,5,4);
         testBoard.movePiece(4,5,4,4);
@@ -230,13 +230,13 @@ public class PawnMovementTests {
 
     }
     @Test
-    public void EnPassantPossibleForASingleStepBlack(){
+    public void EnPassantImpossibleForASingleStepBlack(){
         testBoard.placePiece(testPawnBlack,4,3);
         testBoard.placePiece(testPawnWhite,5,2);
         testBoard.movePiece(5,2,5,3);
-        testBoard.movePiece(4,2,5,3);
+        testBoard.movePiece(4,3,5,2);
         assertTrue(testPawnWhite.isEqual(testBoard.pieceAt(5,3)));
-        assertTrue(testPawnBlack.isEqual(testBoard.pieceAt(4,2)));
+        assertTrue(testPawnBlack.isEqual(testBoard.pieceAt(4,3)));
     }
     @Test
     public void EnPassantIsInvalidAfterATurnForWhite(){

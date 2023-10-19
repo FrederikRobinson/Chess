@@ -29,6 +29,7 @@ public class ChessBoard {
     private final ChessPiece BLACK_KNIGHT = new ChessPiece(KNIGHT,BLACK);
 
     private char currentPlayer;
+    private final boolean[] enPassant = new boolean[8];
 
     private final int BOARD_SIZE_X = 8;
     private final int BOARD_SIZE_Y = 8;
@@ -63,7 +64,7 @@ public class ChessBoard {
         currentPlayer=player;
     }
     private char getOtherPlayer(char player){
-        return player==WHITE?BLACK:WHITE;
+        return player==WHITE?BLACK:player==BLACK?WHITE:EMPTY;
     }
     private void nextTurn(){
         setCurrentPlayer(getOtherPlayer(currentPlayer));
@@ -121,7 +122,7 @@ public class ChessBoard {
         if(!checkPositionIsOnBoard(startXPos, startYPos) || !checkPositionIsOnBoard(endXPos,endYPos)){
             return false;
         }
-        return switch (pieceAt(startXPos, startYPos).getPieceType()) {
+        boolean moveValid = switch (pieceAt(startXPos, startYPos).getPieceType()) {
             case PAWN -> isMoveValidPawn(startXPos, startYPos, endXPos, endYPos);
             case ROOK -> isMoveValidRook(startXPos, startYPos, endXPos, endYPos);
             case BISHOP -> isMoveValidBishop(startXPos, startYPos, endXPos, endYPos);
@@ -130,6 +131,7 @@ public class ChessBoard {
             case KNIGHT -> isMoveValidKnight(startXPos, startYPos, endXPos, endYPos);
             default -> false;
         };
+        return moveValid && !doesMoveCauseCheck(startXPos,startYPos,endXPos,endYPos);
     }
     private boolean isMoveValidKnight(int startXPos,int startYPos,int endXPos,int endYPos){
         if((Math.abs(startXPos-endXPos)==1 && Math.abs(startYPos-endYPos)==2) ||(Math.abs(startXPos-endXPos)==2 && Math.abs(startYPos-endYPos)==1)){
@@ -175,10 +177,21 @@ public class ChessBoard {
 
     }
     private void performMove(int startXPos,int startYPos,int endXPos,int endYPos) {
+        specialMove(startXPos,startYPos,endXPos,endYPos);
         placePiece(pieceAt(startXPos,startYPos),endXPos,endYPos);
         placePiece(EMPTY_PIECE,startXPos,startYPos);
 }
-
+private void specialMove(int startXPos,int startYPos,int endXPos,int endYPos){
+        char playerColour = pieceAt(startXPos,startYPos).getPlayerColour();
+        switch(pieceAt(startXPos,startYPos).getPieceType()){
+            case PAWN-> {if(isEnPassant(endXPos,endYPos,playerColour)){
+                placePiece(EMPTY_PIECE,endXPos,endYPos-getDirectionFromColour(playerColour));}
+                if (startXPos==endXPos && Math.abs(startYPos-endYPos)==2){
+                    enPassant[startXPos]=true;
+                }
+            }
+        }
+}
     private boolean checkPositionIsOnBoard(int xPos,int yPos){
         return (xPos>=0 && yPos>=0 && xPos<BOARD_SIZE_X && yPos<BOARD_SIZE_Y);
     }
@@ -186,7 +199,7 @@ public class ChessBoard {
         return (pieceAt(xPos,yPos).isEqual(EMPTY_PIECE));
     }
     private boolean isPositionEnemy(int xPos,int yPos,char playerColour){
-        return pieceAt(xPos,yPos).getPlayerColour()!=playerColour;
+        return getOtherPlayer(pieceAt(xPos,yPos).getPlayerColour())==playerColour;
     }
     private boolean isMoveValidPawn(int startXPos,int startYPos,int endXPos, int endYPos) {
         if (startXPos == endXPos) {
@@ -214,8 +227,17 @@ public class ChessBoard {
         return (direction == 1 && yPos == 1) || (direction == -1 && yPos == BOARD_SIZE_Y - 2);
     }
     private boolean isMoveValidPawnAttack(int endXPos, int endYPos,char playerColour) {
-
-    return isPositionEnemy(endXPos,endYPos,playerColour);}
+        if (isPositionEnemy(endXPos, endYPos, playerColour)) {
+            return true;
+        }
+        return isEnPassant(endXPos,endYPos,playerColour);
+    }
+    private boolean isEnPassant(int endXPos, int endYPos,char playerColour){
+        if (isPositionEmpty(endXPos,endYPos) && ((endYPos==2 && playerColour==BLACK)||(endYPos==5 && playerColour==WHITE))){
+            return enPassant[endXPos];
+        }
+        return false;
+    }
     public boolean isCheck(char playerColour){
         int[] kingLocation= getKingLocation(playerColour);
         if (kingLocation[0]==-1) return false;
