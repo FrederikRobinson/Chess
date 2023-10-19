@@ -1,5 +1,7 @@
 package com.games;
 
+import java.util.Arrays;
+
 public class ChessBoard {
     private final char WHITE = 'W';
     private final char BLACK = 'B';
@@ -29,11 +31,12 @@ public class ChessBoard {
     private final ChessPiece BLACK_KNIGHT = new ChessPiece(KNIGHT,BLACK);
 
     private char currentPlayer;
-    private final boolean[] enPassant = new boolean[8];
+
 
     private final int BOARD_SIZE_X = 8;
     private final int BOARD_SIZE_Y = 8;
 
+    private final boolean[] enPassant = new boolean[BOARD_SIZE_X];
     public ChessBoard(){
         this(0);
     }
@@ -131,7 +134,7 @@ public class ChessBoard {
             case KNIGHT -> isMoveValidKnight(startXPos, startYPos, endXPos, endYPos);
             default -> false;
         };
-        return moveValid && !doesMoveCauseCheck(startXPos,startYPos,endXPos,endYPos);
+        return moveValid && doesMoveAvoidSelfCheck(startXPos,startYPos,endXPos,endYPos);
     }
     private boolean isMoveValidKnight(int startXPos,int startYPos,int endXPos,int endYPos){
         if((Math.abs(startXPos-endXPos)==1 && Math.abs(startYPos-endYPos)==2) ||(Math.abs(startXPos-endXPos)==2 && Math.abs(startYPos-endYPos)==1)){
@@ -184,13 +187,23 @@ public class ChessBoard {
 private void specialMove(int startXPos,int startYPos,int endXPos,int endYPos){
         char playerColour = pieceAt(startXPos,startYPos).getPlayerColour();
         switch(pieceAt(startXPos,startYPos).getPieceType()){
-            case PAWN-> {if(isEnPassant(endXPos,endYPos,playerColour)){
-                placePiece(EMPTY_PIECE,endXPos,endYPos-getDirectionFromColour(playerColour));}
+            case PAWN-> {
+                if(isEnPassant(endXPos,endYPos,playerColour)){
+                    placePiece(EMPTY_PIECE,endXPos,endYPos-getDirectionFromColour(playerColour));
+                    }
+                resetEnPassant();
                 if (startXPos==endXPos && Math.abs(startYPos-endYPos)==2){
-                    enPassant[startXPos]=true;
+                    setEnPassant(startXPos);
                 }
             }
+            default -> resetEnPassant();
         }
+}
+private void resetEnPassant(){
+    Arrays.fill(enPassant, false);
+}
+private void setEnPassant(int xPos){
+        enPassant[xPos]=true;
 }
     private boolean checkPositionIsOnBoard(int xPos,int yPos){
         return (xPos>=0 && yPos>=0 && xPos<BOARD_SIZE_X && yPos<BOARD_SIZE_Y);
@@ -233,7 +246,7 @@ private void specialMove(int startXPos,int startYPos,int endXPos,int endYPos){
         return isEnPassant(endXPos,endYPos,playerColour);
     }
     private boolean isEnPassant(int endXPos, int endYPos,char playerColour){
-        if (isPositionEmpty(endXPos,endYPos) && ((endYPos==2 && playerColour==BLACK)||(endYPos==5 && playerColour==WHITE))){
+        if (isPositionEmpty(endXPos,endYPos) && ((endYPos==2 && playerColour==BLACK)||(endYPos==BOARD_SIZE_Y-3 && playerColour==WHITE))){
             return enPassant[endXPos];
         }
         return false;
@@ -307,20 +320,20 @@ private void specialMove(int startXPos,int startYPos,int endXPos,int endYPos){
         }
         for (int endXPos = 0; endXPos < BOARD_SIZE_X; endXPos++) {
             for (int endYPos = 0; endYPos < BOARD_SIZE_Y; endYPos++) {
-                if(isMoveValid(startXPos,startYPos,endXPos,endYPos)&&!doesMoveCauseCheck(startXPos,startYPos,endXPos,endYPos)){
+                if(isMoveValid(startXPos,startYPos,endXPos,endYPos)&& doesMoveAvoidSelfCheck(startXPos,startYPos,endXPos,endYPos)){
                     return true;
                 }
             }
         }
         return false;
     }
-    private boolean doesMoveCauseCheck(int startXPos,int startYPos,int endXPos, int endYPos){
+    private boolean doesMoveAvoidSelfCheck(int startXPos, int startYPos, int endXPos, int endYPos){
         ChessPiece startPiece = pieceAt(startXPos,startYPos);
         ChessPiece endPiece = pieceAt(endXPos,endYPos);
         performMove(startXPos,startYPos,endXPos,endYPos);
         boolean result = isCheck(startPiece.getPlayerColour());
         placePiece(startPiece,startXPos,startYPos);
         placePiece(endPiece,endXPos,endYPos);
-        return result;
+        return !result;
     }
 }
