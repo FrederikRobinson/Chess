@@ -14,10 +14,10 @@ public class StalemateTests {
     @BeforeEach
     public void setUp(){
         testBoard = new ChessBoard();
-        testKingWhite = new ChessPiece('K','W');
-        testKingBlack = new ChessPiece('K','B');
-        testRookWhite = new ChessPiece('R','W');
-        testRookBlack = new ChessPiece('R','B');
+        testKingWhite = testBoard.getPiece('K','W');
+        testKingBlack = testBoard.getPiece('K','B');
+        testRookWhite = testBoard.getPiece('R','W');
+        testRookBlack = testBoard.getPiece('R','B');
         emptyPiece = testBoard.getPiece('X','X');
     }
     @Test

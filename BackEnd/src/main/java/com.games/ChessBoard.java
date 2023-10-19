@@ -10,6 +10,7 @@ public class ChessBoard {
     private final char PAWN = 'P';
     private final char BISHOP = 'B';
     private final char EMPTY = 'X';
+    private final char STALEMATE = 'S';
 
     private final char[] PIECE_ORDER = {ROOK,KNIGHT,BISHOP,QUEEN,KING,BISHOP,KNIGHT,ROOK};
     private final ChessPiece[][] BOARD = new ChessPiece[8][8];
@@ -27,12 +28,52 @@ public class ChessBoard {
     private final ChessPiece WHITE_KNIGHT = new ChessPiece(KNIGHT,WHITE);
     private final ChessPiece BLACK_KNIGHT = new ChessPiece(KNIGHT,BLACK);
 
+    private char currentPlayer;
 
     private final int BOARD_SIZE_X = 8;
     private final int BOARD_SIZE_Y = 8;
 
     public ChessBoard(){
-        setBoard();
+        this(0);
+    }
+    public ChessBoard(int boardCode){
+        switch (boardCode){
+            case 0 -> setEmptyBoard();
+            default -> setBoard();
+        }
+        setCurrentPlayer(WHITE);
+    }
+    public char isGameOver(){
+        if (isStalemate(currentPlayer)){
+            return STALEMATE;
+        }
+        if (isCheckmate(currentPlayer)){
+            return getOtherPlayer(currentPlayer);
+        }
+        return EMPTY;
+    }
+    public boolean takeTurn(char playerColour,int startXPos, int startYPos,int endXPos, int endYPos){
+        if (playerColour==currentPlayer&&movePiece(startXPos,startYPos,endXPos,endYPos)){
+           nextTurn();
+           return true;
+        }
+        return false;
+    }
+    private void setCurrentPlayer(char player){
+        currentPlayer=player;
+    }
+    private char getOtherPlayer(char player){
+        return player==WHITE?BLACK:WHITE;
+    }
+    private void nextTurn(){
+        setCurrentPlayer(getOtherPlayer(currentPlayer));
+    }
+    private void setEmptyBoard(){
+        for (int x = 0; x < BOARD_SIZE_X; x++) {
+            for (int y = 0; y < BOARD_SIZE_Y; y++) {
+                placePiece(EMPTY_PIECE,x,y);
+            }
+        }
     }
     private void setBoard(){
         for (int x = 0; x < BOARD_SIZE_X; x++) {

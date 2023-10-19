@@ -23,57 +23,57 @@ public class PlaceAndGetMethodTests {
     @BeforeEach
     public void setUp(){
         testBoard = new ChessBoard();
-        testKingWhite = new ChessPiece('K','W');
-        testKingBlack = new ChessPiece('K','B');
-        testKnightWhite = new ChessPiece('N','W');
-        testKnightBlack = new ChessPiece('N','B');
-        testQueenWhite = new ChessPiece('Q','W');
-        testQueenBlack = new ChessPiece('Q','B');
-        testPawnWhite = new ChessPiece('P','W');
-        testPawnBlack = new ChessPiece('P','B');
-        testBishopWhite = new ChessPiece('B','W');
-        testBishopBlack = new ChessPiece('B','B');
-        testRookWhite = new ChessPiece('R','W');
-        testRookBlack = new ChessPiece('R','B');
+        testKingWhite = testBoard.getPiece('K','W');
+        testKingBlack = testBoard.getPiece('K','B');
+        testKnightWhite = testBoard.getPiece('N','W');
+        testKnightBlack = testBoard.getPiece('N','B');
+        testQueenWhite = testBoard.getPiece('Q','W');
+        testQueenBlack = testBoard.getPiece('Q','B');
+        testPawnWhite = testBoard.getPiece('P','W');
+        testPawnBlack = testBoard.getPiece('P','B');
+        testBishopWhite = testBoard.getPiece('B','W');
+        testBishopBlack = testBoard.getPiece('B','B');
+        testRookWhite = testBoard.getPiece('R','W');
+        testRookBlack = testBoard.getPiece('R','B');
         emptyPiece = testBoard.getPiece('X','X');
     }
 
     @Test
     public void PlaceRookWorks() {
         testBoard.placePiece(testRookWhite, 0, 0);
-        assertEquals(testRookWhite, testBoard.pieceAt(0, 0));
+        assertTrue(testRookWhite.isEqual(testBoard.pieceAt(0, 0)));
     }
     @Test
     public void PlaceQueenWorks() {
         testBoard.placePiece(testQueenWhite, 0, 0);
-        assertEquals(testQueenWhite, testBoard.pieceAt(0, 0));
+        assertTrue(testQueenWhite.isEqual(testBoard.pieceAt(0, 0)));
     }
     @Test
     public void PlacePawnWorks(){
         testBoard.placePiece(testPawnWhite,0,0);
-        assertEquals(testPawnWhite,testBoard.pieceAt(0,0));
+        assertTrue(testPawnWhite.isEqual(testBoard.pieceAt(0,0)));
     }
     @Test
     public void PlaceKnightWorks() {
         testBoard.placePiece(testKnightWhite, 0, 0);
-        assertEquals(testKnightWhite, testBoard.pieceAt(0, 0));
+        assertTrue(testKnightWhite.isEqual(testBoard.pieceAt(0, 0)));
     }
     @Test
     public void PlaceKingWorks() {
         testBoard.placePiece(testKingWhite, 0, 0);
-        assertEquals(testKingWhite, testBoard.pieceAt(0, 0));
+        assertTrue(testKingWhite.isEqual(testBoard.pieceAt(0, 0)));
     }
     @Test
     public void PlaceBishopWorks() {
         testBoard.placePiece(testBishopWhite, 0, 0);
-        assertEquals(testBishopWhite, testBoard.pieceAt(0, 0));
+        assertTrue(testBishopWhite.isEqual(testBoard.pieceAt(0, 0)));
     }
     @Test
     public void PlaceEmptyPieceWorks() {
         testBoard.placePiece(testRookWhite, 0, 0);
-        assertEquals(testRookWhite, testBoard.pieceAt(0, 0));
+        assertTrue(testRookWhite.isEqual(testBoard.pieceAt(0, 0)));
         testBoard.placePiece(emptyPiece,0,0);
-        assertEquals(emptyPiece, testBoard.pieceAt(0, 0));
+        assertTrue(emptyPiece.isEqual(testBoard.pieceAt(0, 0)));
     }
     @Test
     public void PlaceOffBoardReturnsFalse(){
@@ -95,7 +95,7 @@ public class PlaceAndGetMethodTests {
     public void PlacingAPieceOverridesOtherPieces(){
         testBoard.placePiece(testPawnWhite,0,0);
         testBoard.placePiece(testKingWhite,0,0);
-        assertEquals(testKingWhite,testBoard.pieceAt(0,0));
+        assertTrue(testKingWhite.isEqual(testBoard.pieceAt(0,0)));
     }
     @Test
     public void GetPieceGetsTheCorrectPiece(){
