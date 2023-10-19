@@ -242,10 +242,28 @@ public class PawnMovementTests {
     public void EnPassantIsInvalidAfterATurnForWhite(){
         testBoard.placePiece(testPawnBlack,4,6);
         testBoard.placePiece(testPawnWhite,5,4);
+        testBoard.placePiece(testPawnBlack,0,3);
+        testBoard.placePiece(testPawnWhite,1,5);
         testBoard.movePiece(4,6,4,4);
+        testBoard.movePiece(1,5,1,6);
+        testBoard.movePiece(0,3,0,2);
         testBoard.movePiece(5,4,4,5);
-        assertTrue(testPawnWhite.isEqual(testBoard.pieceAt(4,5)));
-        assertTrue(emptyPiece.isEqual(testBoard.pieceAt(4,4)));
+        assertTrue(emptyPiece.isEqual(testBoard.pieceAt(4,5)));
+        assertTrue(testPawnBlack.isEqual(testBoard.pieceAt(4,4)));
+
+    }
+    @Test
+    public void EnPassantIsInvalidAfterATurnForBlack(){
+        testBoard.placePiece(testPawnBlack,4,3);
+        testBoard.placePiece(testPawnWhite,5,1);
+        testBoard.placePiece(testPawnBlack,0,3);
+        testBoard.placePiece(testPawnWhite,1,5);
+        testBoard.movePiece(5,1,5,3);
+        testBoard.movePiece(0,3,0,2);
+        testBoard.movePiece(1,5,1,6);
+        testBoard.movePiece(4,3,5,2);
+        assertTrue(emptyPiece.isEqual(testBoard.pieceAt(5,2)));
+        assertTrue(testPawnWhite.isEqual(testBoard.pieceAt(5,3)));
 
     }
 }
