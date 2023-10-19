@@ -16,11 +16,11 @@ public class CheckmateTests {
     @BeforeEach
     public void setUp(){
         testBoard = new ChessBoard();
-        testKingWhite = new ChessPiece('K','W');
-        testKingBlack = new ChessPiece('K','B');
-        testRookWhite = new ChessPiece('R','W');
-        testRookBlack = new ChessPiece('R','B');
-        testBishopWhite = new ChessPiece('B','W');
+        testKingWhite = testBoard.getPiece('K','W');
+        testKingBlack = testBoard.getPiece('K','B');
+        testRookWhite = testBoard.getPiece('R','W');
+        testRookBlack = testBoard.getPiece('R','B');
+        testBishopWhite = testBoard.getPiece('B','W');
         emptyPiece = testBoard.getPiece('X','X');
     }
     @Test

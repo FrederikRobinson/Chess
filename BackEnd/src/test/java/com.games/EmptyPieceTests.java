@@ -13,8 +13,8 @@ public class EmptyPieceTests {
     @BeforeEach
     public void setUp(){
         testBoard = new ChessBoard();
-        testRookWhite = new ChessPiece('R','W');
-        testRookBlack = new ChessPiece('R','B');
+        testRookWhite = testBoard.getPiece('R','W');
+        testRookBlack = testBoard.getPiece('R','B');
         emptyPiece = testBoard.getPiece('X','X');
     }
 
@@ -29,7 +29,7 @@ public class EmptyPieceTests {
         testBoard.movePiece(6,4,5,5);
         testBoard.movePiece(6,5,5,5);
         testBoard.movePiece(6,6,5,5);
-        assertEquals(testRookWhite,testBoard.pieceAt(5,5));
+        assertTrue(testRookWhite.isEqual(testBoard.pieceAt(5,5)));
     }
     @Test
     public void EmptyPieceCannotCaptureBlack(){
@@ -42,6 +42,6 @@ public class EmptyPieceTests {
         testBoard.movePiece(6,4,5,5);
         testBoard.movePiece(6,5,5,5);
         testBoard.movePiece(6,6,5,5);
-        assertEquals(testRookBlack,testBoard.pieceAt(5,5));
+        assertTrue(testRookBlack.isEqual(testBoard.pieceAt(5,5)));
     }
 }
