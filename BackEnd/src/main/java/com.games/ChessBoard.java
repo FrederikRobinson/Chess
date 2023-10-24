@@ -37,6 +37,9 @@ public class ChessBoard {
     private final int BOARD_SIZE_Y = 8;
 
     private final boolean[] enPassant = new boolean[BOARD_SIZE_X];
+    private boolean kingUnmovedWhite=true;
+    private boolean kingUnmovedBlack=true;
+    private final boolean[][] rookUnmoved={{true,true},{true,true}};
     public ChessBoard(){
         this(0);
     }
@@ -122,9 +125,7 @@ public class ChessBoard {
     }
 
     public boolean isMoveValid(int startXPos,int startYPos,int endXPos,int endYPos){
-        if(!checkPositionIsOnBoard(startXPos, startYPos) || !checkPositionIsOnBoard(endXPos,endYPos)){
-            return false;
-        }
+        if (positionChecks(startXPos, startYPos, endXPos, endYPos)) return false;
         boolean moveValid = switch (pieceAt(startXPos, startYPos).getPieceType()) {
             case PAWN -> isMoveValidPawn(startXPos, startYPos, endXPos, endYPos);
             case ROOK -> isMoveValidRook(startXPos, startYPos, endXPos, endYPos);
@@ -136,6 +137,11 @@ public class ChessBoard {
         };
         return moveValid && doesMoveAvoidSelfCheck(startXPos,startYPos,endXPos,endYPos);
     }
+
+    private boolean positionChecks(int startXPos, int startYPos, int endXPos, int endYPos) {
+        return (!checkPositionIsOnBoard(startXPos, startYPos) || !checkPositionIsOnBoard(endXPos, endYPos) || (startXPos==endXPos && startYPos==endYPos));
+    }
+
     private boolean isMoveValidKnight(int startXPos,int startYPos,int endXPos,int endYPos){
         if((Math.abs(startXPos-endXPos)==1 && Math.abs(startYPos-endYPos)==2) ||(Math.abs(startXPos-endXPos)==2 && Math.abs(startYPos-endYPos)==1)){
             return (isPositionEnemy(endXPos,endYPos,pieceAt(startXPos,startYPos).getPlayerColour())||isPositionEmpty(endXPos,endYPos));
@@ -143,10 +149,77 @@ public class ChessBoard {
         return false;
 }
     private boolean isMoveValidKing(int startXPos,int startYPos,int endXPos,int endYPos){
-        if(Math.abs(startXPos-endXPos)>1 || Math.abs(startYPos-endYPos)>1){
+        if(Math.abs(startXPos-endXPos)<=1 && Math.abs(startYPos-endYPos)<=1){
+            return isPositionEmpty(endXPos,endYPos)||isPositionEnemy(endXPos,endYPos,pieceAt(startXPos,startYPos).getPlayerColour());
+        }
+        return isCastling(startXPos,startYPos,endXPos,endYPos);
+    }
+    private boolean isCastling(int startXPos,int startYPos,int endXPos,int endYPos){
+        char playerColour = pieceAt(startXPos,startYPos).getPlayerColour();
+        if (playerColour==WHITE){
+            return isCastlingWhite(startXPos,startYPos,endXPos,endYPos);
+        }
+        return isCastlingBlack(startXPos,startYPos,endXPos,endYPos);
+    }
+    private boolean isCastlingWhite(int startXPos,int startYPos,int endXPos,int endYPos){
+        if (!kingUnmovedWhite){
             return false;
         }
-        return isMoveValidStraightLine(startXPos,startYPos,endXPos,endYPos);
+        if (rookUnmoved[0][0] && startXPos==4 && startYPos==0 && endXPos==2 && endYPos==0){
+            return isCastlingLeftWhite();
+        }
+        if (rookUnmoved[1][0] && startXPos==4 && startYPos==0 && endXPos==6 && endYPos==0){
+            return isCastlingRightWhite();
+        }
+        return false;
+    }
+    private boolean isCastlingBlack(int startXPos,int startYPos,int endXPos,int endYPos){
+        if (!kingUnmovedBlack){
+            return false;
+        }
+        if (rookUnmoved[0][1] && startXPos==4 && startYPos==7 && endXPos==2 && endYPos==7){
+            return isCastlingLeftBlack();
+        }
+        if (rookUnmoved[1][1] && startXPos==4 && startYPos==7 && endXPos==6 && endYPos==7){
+            return isCastlingRightBlack();
+        }
+        return false;
+    }
+    private boolean isCastlingLeftWhite(){
+        if (!isPositionEmpty(1,0)||!isPositionEmpty(2,0)||isPositionEmpty(3,0)){
+            return false;
+        }
+        if (isCheck(currentPlayer)){
+            return false;
+        }
+        return !(isTileInCheck(2,0,currentPlayer)||isTileInCheck(3,0,currentPlayer));
+    }
+    private boolean isCastlingRightWhite(){
+        if (!isPositionEmpty(5,0)||!isPositionEmpty(6,0)){
+            return false;
+        }
+        if (isCheck(currentPlayer)){
+            return false;
+        }
+        return !(isTileInCheck(5,0,currentPlayer)||isTileInCheck(6,0,currentPlayer));
+    }
+    private boolean isCastlingLeftBlack(){
+        if (!isPositionEmpty(1,7)||!isPositionEmpty(2,7)||isPositionEmpty(3,7)){
+            return false;
+        }
+        if (isCheck(currentPlayer)){
+            return false;
+        }
+        return !(isTileInCheck(2,7,currentPlayer)||isTileInCheck(3,7,currentPlayer));
+    }
+    private boolean isCastlingRightBlack(){
+        if (!isPositionEmpty(5,7)||!isPositionEmpty(6,7)){
+            return false;
+        }
+        if (isCheck(currentPlayer)){
+            return false;
+        }
+        return !(isTileInCheck(5,7,currentPlayer)||isTileInCheck(6,7,currentPlayer));
     }
     private boolean isMoveValidQueen(int startXPos,int startYPos,int endXPos,int endYPos){
         if(startXPos!=endXPos && startYPos!=endYPos && Math.abs(startXPos-endXPos)!=Math.abs(startYPos-endYPos)){
@@ -181,8 +254,11 @@ public class ChessBoard {
     }
     private void performMove(int startXPos,int startYPos,int endXPos,int endYPos) {
         specialMove(startXPos,startYPos,endXPos,endYPos);
-        placePiece(pieceAt(startXPos,startYPos),endXPos,endYPos);
-        placePiece(EMPTY_PIECE,startXPos,startYPos);
+        performMoveSingle(startXPos,startYPos,endXPos,endYPos);
+}
+private void performMoveSingle(int startXPos, int startYPos, int endXPos, int endYPos){
+    placePiece(pieceAt(startXPos,startYPos),endXPos,endYPos);
+    placePiece(getPiece(EMPTY,EMPTY),startXPos,startYPos);
 }
 private void specialMove(int startXPos,int startYPos,int endXPos,int endYPos){
         char playerColour = pieceAt(startXPos,startYPos).getPlayerColour();
@@ -196,8 +272,52 @@ private void specialMove(int startXPos,int startYPos,int endXPos,int endYPos){
                     setEnPassant(startXPos);
                 }
             }
+            case KING->{if(isCastling(startXPos,startYPos,endXPos,endYPos)){
+                performCastling(endXPos,endYPos);}
+                updateUnmovedKing();
+                resetEnPassant();
+            }
+            case ROOK->{updateUnmovedRook(startXPos,startYPos);
+            resetEnPassant();}
             default -> resetEnPassant();
         }
+}
+private void updateUnmovedKing(){
+        if (currentPlayer==WHITE){
+            kingUnmovedWhite=false;
+        }
+        if (currentPlayer==BLACK){
+            kingUnmovedBlack=false;
+        }
+}
+private void updateUnmovedRook(int xPos,int yPos){
+        if (xPos==0 && yPos==0){
+            rookUnmoved[0][0]=false;
+        }
+    if (xPos==0 && yPos==7){
+        rookUnmoved[0][1]=false;
+    }
+    if (xPos==7 && yPos==0){
+        rookUnmoved[1][0]=false;
+    }
+    if (xPos==7 && yPos==7){
+        rookUnmoved[1][1]=false;
+    }
+}
+private void performCastling(int endXPos,int endYPos){
+        if (endYPos==0 && endXPos==2){
+            performMove(0,0,0,3);
+        }
+        if (endYPos==0 && endXPos==6){
+            performMove(0,7,0,5);
+        }
+    if (endYPos==7 && endXPos==2){
+        performMove(7,0,7,3);
+    }
+    if (endYPos==7 && endXPos==6){
+        performMove(7,7,7,5);
+    }
+
 }
 private void resetEnPassant(){
     Arrays.fill(enPassant, false);
@@ -254,9 +374,12 @@ private void setEnPassant(int xPos){
     public boolean isCheck(char playerColour){
         int[] kingLocation= getKingLocation(playerColour);
         if (kingLocation[0]==-1) return false;
+        return isTileInCheck(kingLocation[0],kingLocation[1],playerColour);
+}
+private boolean isTileInCheck(int targetXPos, int targetYPos, char playerColour){
     for (int xPos = 0; xPos < BOARD_SIZE_X; xPos++) {
         for (int yPos = 0; yPos < BOARD_SIZE_Y; yPos++) {
-            if(isPositionEnemy(xPos,yPos,playerColour) && isMoveValid(xPos,yPos,kingLocation[0],kingLocation[1])){
+            if(isPositionEnemy(xPos,yPos,playerColour) && isMoveValid(xPos,yPos,targetXPos,targetYPos)){
                 return true;
             }
         }
@@ -328,12 +451,64 @@ private void setEnPassant(int xPos){
         return false;
     }
     private boolean doesMoveAvoidSelfCheck(int startXPos, int startYPos, int endXPos, int endYPos){
-        ChessPiece startPiece = pieceAt(startXPos,startYPos);
+        return !performTempMove(startXPos,startYPos,endXPos,endYPos);
+    }
+    private boolean performTempMove(int startXPos, int startYPos, int endXPos, int endYPos){
+        if (isCastling(startXPos, startYPos, endXPos, endYPos)){
+            return performTempCastling(startXPos,startYPos,endXPos,endYPos);
+        }
+        if (pieceAt(startXPos,startYPos).getPieceType()==PAWN &&isEnPassant(endXPos,endYPos,pieceAt(startXPos,startYPos).getPlayerColour())){
+            return performTempEnPassant(startXPos,startYPos,endXPos,endYPos);
+        }
+        return performTempMoveSingle(startXPos,startYPos,endXPos,endYPos);
+    }
+    private boolean performTempMoveSingle(int startXPos, int startYPos, int endXPos, int endYPos){
         ChessPiece endPiece = pieceAt(endXPos,endYPos);
-        performMove(startXPos,startYPos,endXPos,endYPos);
-        boolean result = isCheck(startPiece.getPlayerColour());
-        placePiece(startPiece,startXPos,startYPos);
+        performMoveSingle(startXPos,startYPos,endXPos,endYPos);
+        boolean result = isCheck(pieceAt(endXPos,endYPos).getPlayerColour());
+        performMoveSingle(endXPos,endYPos,startXPos,startYPos);
         placePiece(endPiece,endXPos,endYPos);
-        return !result;
+        return result;
+    }
+    private boolean performTempEnPassant(int startXPos, int startYPos, int endXPos, int endYPos){
+        boolean result =false;
+        switch(endYPos){
+            case 2-> {
+                placePiece(getPiece(EMPTY,EMPTY),endXPos,3);
+                result=performTempMoveSingle(startXPos,startYPos,endXPos,endYPos);
+                placePiece(getPiece(PAWN,WHITE),endXPos,3);
+            }
+            case BOARD_SIZE_Y-3 ->{
+                placePiece(getPiece(EMPTY,EMPTY),endXPos,4);
+                result=performTempMoveSingle(startXPos,startYPos,endXPos,endYPos);
+                placePiece(getPiece(PAWN,WHITE),endXPos,4);
+            }
+        }
+        return result;
+    }
+
+    private boolean performTempCastling(int startXPos, int startYPos, int endXPos, int endYPos){
+        boolean result=false;
+        if (endXPos==2 && endYPos==7){
+            performMoveSingle(0,7,3,7);
+            result = performTempMoveSingle(startXPos,startYPos,endXPos,endYPos);
+            performMoveSingle(3,7,0,7);
+        }
+        if (endXPos==6 && endYPos==7){
+            performMoveSingle(7,7,5,7);
+            result = performTempMoveSingle(startXPos,startYPos,endXPos,endYPos);
+            performMoveSingle(5,7,7,7);
+        }
+        if (endXPos==2 && endYPos==0){
+            performMoveSingle(0,0,3,0);
+            result = performTempMoveSingle(startXPos,startYPos,endXPos,endYPos);
+            performMoveSingle(3,0,0,0);
+        }
+        if (endXPos==6 && endYPos==0){
+            performMoveSingle(7,0,5,0);
+            result = performTempMoveSingle(startXPos,startYPos,endXPos,endYPos);
+            performMoveSingle(5,0,7,0);
+        }
+        return result;
     }
 }
