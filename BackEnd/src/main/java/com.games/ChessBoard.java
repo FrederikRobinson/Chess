@@ -88,11 +88,11 @@ public class ChessBoard {
         }
     }
     private void setColumn(int columnNumber){
-        SetPieces(columnNumber);
+        setPieces(columnNumber);
         setEmptySpaces(columnNumber);
     }
 
-    private void SetPieces( int columnNumber) {
+    private void setPieces( int columnNumber) {
         placePiece(getPiece(PIECE_ORDER[columnNumber],WHITE), columnNumber,0);
         placePiece(getPiece(PAWN,WHITE), columnNumber,1);
         placePiece(getPiece(PAWN,BLACK), columnNumber,6);
