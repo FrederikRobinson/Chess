@@ -12,14 +12,27 @@ public class MoveController {
     public GameState move(@RequestBody GameMove move) {//@RequestParam(value = "name", defaultValue = "World") String name
         //Get the board from the database
         ChessBoard chessBoard = databaseManager.getGame(move.getGameId());
+        if (chessBoard == null){
+            return new GameState(tempCurrentGame.getBoard(),tempCurrentGame.getCurrentPlayer());}
         //Attempt the move from the request
+        chessBoard.takeTurn(move.getPlayerColour(), move.getStartXPos(), move.getStartYPos(), move.getEndXPos(), move.getEndYPos());
         //If it is successful update the database and return the new board
+        boolean updateDb = databaseManager.updateGame(chessBoard,move.getGameId());
         //If it fails return an error message
         if (!tempCurrentGame.takeTurn(move.getPlayerColour(),move.getStartXPos(),move.getStartYPos(),move.getEndXPos(),move.getEndYPos())){
             System.out.println("Bad");
         }
-        if (chessBoard == null){
-        return new GameState(tempCurrentGame.getBoard(),tempCurrentGame.getCurrentPlayer());}
+
         return new GameState(chessBoard.getBoard(),chessBoard.getCurrentPlayer());
+    }
+//    @CrossOrigin(origins = "http://localhost:5173")
+//    @GetMapping("/makeMove")
+//    public NewGameResponse makeGame(){
+//        return databaseManager.createGame();
+//    }
+    @CrossOrigin(origins = "http://localhost:5173")
+    @GetMapping("/makeMove")
+    public NewGameResponse makeGame(){
+        return databaseManager.createGame();
     }
 }

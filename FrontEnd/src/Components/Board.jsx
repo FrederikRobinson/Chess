@@ -2,12 +2,12 @@ import Tile from './Tile.jsx'
 import './Board.css';
 import { createBoard, emptyBoard, nextPlayer } from '../Utils/boardUtils.jsx'
 import { useEffect, useState } from 'react';
-import { makeMove } from '../Utils/apiCalls.js';
+import { makeMove, createGame } from '../Utils/apiCalls.js';
 
 
 const Board = () => {
     const [board, setBoard] = useState(emptyBoard);
-    const [gameId, setGameId] = useState(1);
+    const [gameId, setGameId] = useState(0);
     const [player, setPlayer] = useState('X');
     const [currentPlayer, setCurrentPlayer] = useState('X');
     const [selectedTile, setSelectedTile] = useState([-1, -1]);
@@ -18,6 +18,19 @@ const Board = () => {
     //     setBoard
     // }, [])
 
+    const handleCreateGame = async () => {
+        try {
+            const res = await createGame();
+            console.dir(res);
+            setGameId(res.gameId);
+            setBoard(res.board);
+            setSelectedTile([-1, -1]);
+            setCurrentPlayer("W");
+        }
+        catch {
+
+        }
+    }
     const handleMakeMove = async (startXPos, startYPos, endXPos, endYPos, playerColour, gameId) => {
         try {
             const res = await makeMove(startXPos, startYPos, endXPos, endYPos, playerColour, gameId);
@@ -25,6 +38,7 @@ const Board = () => {
             setBoard(res.updatedBoard);
             setSelectedTile([-1, -1]);
             setCurrentPlayer(res.playerTurn);
+
         }
         catch {
             //TODO error pop up for invalid move or connection error
@@ -35,7 +49,12 @@ const Board = () => {
             setSelectedTile([xPos, yPos]);
         }
         else {
-            handleMakeMove(selectedTile[0], selectedTile[1], xPos, yPos, currentPlayer, gameId)
+            if (gameId == 0) {
+                handleCreateGame();
+            }
+            else {
+                handleMakeMove(selectedTile[0], selectedTile[1], xPos, yPos, currentPlayer, gameId);
+            }
         }
     }
     const isTileSelected = (xPos, yPos) => { return xPos == selectedTile[0] && yPos == selectedTile[1] ? "Highlighted" : ""; }

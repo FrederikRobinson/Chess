@@ -12,7 +12,7 @@ public class RestServiceApplication {
 	public static void main(String[] args) {
 		try {
 			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/testdb", "student", "student");
-		}
+			System.out.println("Successful connection to db");	}
 		catch (Exception e){
 			System.out.println("Failed to connect");
 			System.out.println(e);

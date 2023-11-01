@@ -36,7 +36,7 @@ public class ChessBoard {
     private final int BOARD_SIZE_X = 8;
     private final int BOARD_SIZE_Y = 8;
 
-    private final boolean[] enPassant = new boolean[BOARD_SIZE_X];
+    private int enPassant = -1;
     private boolean kingUnmovedWhite=true;
     private boolean kingUnmovedBlack=true;
     private final boolean[][] rookUnmoved={{true,true},{true,true}};
@@ -74,7 +74,7 @@ public class ChessBoard {
     public char getCurrentPlayer(){
         return currentPlayer;
     }
-    private void setCurrentPlayer(char player){
+    public void setCurrentPlayer(char player){
         currentPlayer=player;
     }
     private char getOtherPlayer(char player){
@@ -313,6 +313,12 @@ private void updateUnmovedRook(int xPos,int yPos){
         rookUnmoved[1][1]=false;
     }
 }
+public void setCastling(int castlingCode){
+        rookUnmoved[1][1]=castlingCode%2==1;
+        rookUnmoved[1][0]=(castlingCode/2)%2==1;
+        rookUnmoved[0][1]=(castlingCode/4)%2==1;
+        rookUnmoved[0][0]=(castlingCode/8)%2==1;
+}
 private void performCastling(int endXPos,int endYPos){
         if (endYPos==0 && endXPos==2){
             performMove(0,0,0,3);
@@ -328,15 +334,28 @@ private void performCastling(int endXPos,int endYPos){
     }
 
 }
-private void resetEnPassant(){
-    Arrays.fill(enPassant, false);
+public int getCastlingCode(){
+        int code = 0;
+    for (int x = 0; x < 2; x++) {
+        for (int y = 0; y < 2; y++) {
+            code*=2;
+            if (rookUnmoved[x][y]){
+                code++;
+            }
+        }
+    }
+    return code;
 }
-private void setEnPassant(int xPos){
-        enPassant[xPos]=true;
+public void resetEnPassant(){
+    enPassant=-1;
+}
+public void setEnPassant(int xPos){
+        enPassant=xPos;
 }
     private boolean checkPositionIsOnBoard(int xPos,int yPos){
         return (xPos>=0 && yPos>=0 && xPos<BOARD_SIZE_X && yPos<BOARD_SIZE_Y);
     }
+    public int getEnPassant(){return enPassant;}
     private boolean isPositionEmpty(int xPos,int yPos){
         return (pieceAt(xPos,yPos).isEqual(EMPTY_PIECE));
     }
@@ -376,7 +395,7 @@ private void setEnPassant(int xPos){
     }
     private boolean isEnPassant(int endXPos, int endYPos,char playerColour){
         if (isPositionEmpty(endXPos,endYPos) && ((endYPos==2 && playerColour==BLACK)||(endYPos==BOARD_SIZE_Y-3 && playerColour==WHITE))){
-            return enPassant[endXPos];
+            return enPassant==endXPos;
         }
         return false;
     }
