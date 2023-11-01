@@ -22,9 +22,9 @@ const Board = () => {
         try {
             const res = await makeMove(startXPos, startYPos, endXPos, endYPos, playerColour, gameId);
             console.dir(res);
-            setBoard(res.content);
+            setBoard(res.updatedBoard);
             setSelectedTile([-1, -1]);
-            setCurrentPlayer(nextPlayer(currentPlayer));
+            setCurrentPlayer(res.playerTurn);
         }
         catch {
             //TODO error pop up for invalid move or connection error
@@ -38,7 +38,8 @@ const Board = () => {
             handleMakeMove(selectedTile[0], selectedTile[1], xPos, yPos, currentPlayer, gameId)
         }
     }
-    const functionsForTiles = { handleTileSelection: handleTileSelection }
+    const isTileSelected = (xPos, yPos) => { return xPos == selectedTile[0] && yPos == selectedTile[1] ? "Highlighted" : ""; }
+    const functionsForTiles = { handleTileSelection: handleTileSelection, isTileSelected }
     const tiles = createBoard(board, functionsForTiles);
     return (
         <>
