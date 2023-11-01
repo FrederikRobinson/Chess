@@ -67,3 +67,17 @@ export const nextPlayer = (player) => {
     }
     return 'W';
 };
+export const convertToUnicodePiece = (pieceColour, pieceType) => {
+    if (pieceColour == 'X' || pieceType == 'X') {
+        return "";
+    }
+    let letterCode = 4 + (pieceColour == 'B' ? 6 : 0);
+    switch (pieceType) {
+        case 'P': letterCode += 1;
+        case 'N': letterCode += 1;
+        case 'B': letterCode += 1;
+        case 'R': letterCode += 1;
+        case 'Q': letterCode += 1;
+    }
+    return String.fromCharCode(parseInt("265" + letterCode.toString(16), 16))
+}

@@ -1,3 +1,5 @@
 package restservice;
 
-public record GameState(char[][][] content) { }
+import com.games.ChessPiece;
+
+public record GameState(ChessPiece[][] updatedBoard, char playerTurn) { }

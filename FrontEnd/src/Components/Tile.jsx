@@ -1,13 +1,14 @@
-import { getTileColour } from "../Utils/boardUtils.jsx";
+import { convertToUnicodePiece, getTileColour } from "../Utils/boardUtils.jsx";
 import PropTypes from "prop-types";
 
 const Tile = ({ xPos, yPos, piece, functions }) => {
-    const tileColour = getTileColour(xPos, yPos);
+    const tileColour = getTileColour(xPos, yPos) + functions.isTileSelected(xPos, yPos);
 
     return (
         <>
             <div className={`${tileColour} x${xPos} y${yPos} tileContainer`} onClick={() => functions.handleTileSelection(xPos, yPos)}>
-                <div className={"tileContent"} >{xPos}{yPos}{piece[0]}{piece[1]}</div>
+                <div className={"tileNumber"}>{xPos}{yPos}</div>
+                <div className={"tileContent"} >{convertToUnicodePiece(piece.playerColour, piece.pieceType)}</div>
             </div>
         </>
     )

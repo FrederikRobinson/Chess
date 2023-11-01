@@ -50,6 +50,9 @@ public class ChessBoard {
         }
         setCurrentPlayer(WHITE);
     }
+    public ChessPiece[][] getBoard(){
+        return BOARD;
+    }
     public char isGameOver(){
         if (isStalemate(currentPlayer)){
             return STALEMATE;
@@ -60,11 +63,16 @@ public class ChessBoard {
         return EMPTY;
     }
     public boolean takeTurn(char playerColour,int startXPos, int startYPos,int endXPos, int endYPos){
+        System.out.println(playerColour);
+        System.out.println(currentPlayer);
         if (playerColour==currentPlayer&&movePiece(startXPos,startYPos,endXPos,endYPos)){
            nextTurn();
            return true;
         }
         return false;
+    }
+    public char getCurrentPlayer(){
+        return currentPlayer;
     }
     private void setCurrentPlayer(char player){
         currentPlayer=player;
@@ -117,6 +125,7 @@ public class ChessBoard {
     }
 
     public boolean movePiece(int startXPos,int startYPos,int endXPos,int endYPos){
+        System.out.println(""+startXPos+startYPos+endXPos+endYPos);
         if (isMoveValid(startXPos,startYPos,endXPos,endYPos)){
             performMove(startXPos, startYPos, endXPos, endYPos);
             return true;

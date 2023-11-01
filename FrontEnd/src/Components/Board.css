@@ -12,6 +12,18 @@
     display: grid
 }
 
+.whiteHighlighted {
+    background-color: rgb(200, 200, 255);
+    border-color: blue;
+    border: 20px;
+}
+
+.blackHighlighted {
+    background-color: rgb(185, 70, 70);
+    border-color: blue;
+    border: 20px;
+}
+
 .tileContainer {
     width: 100%;
     padding-top: 100%;
@@ -20,6 +32,20 @@
 }
 
 .tileContent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    font-size: 2rem;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+
+}
+
+.tileNumber {
     position: absolute;
     top: 0;
 }
