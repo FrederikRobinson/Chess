@@ -7,7 +7,7 @@ import { makeMove } from '../Utils/apiCalls.js';
 
 const Board = () => {
     const [board, setBoard] = useState(emptyBoard);
-    const [gameId, setGameId] = useState("");
+    const [gameId, setGameId] = useState(1);
     const [player, setPlayer] = useState('X');
     const [currentPlayer, setCurrentPlayer] = useState('X');
     const [selectedTile, setSelectedTile] = useState([-1, -1]);

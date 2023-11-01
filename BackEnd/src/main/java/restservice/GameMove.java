@@ -6,7 +6,7 @@ public class GameMove {
     private int endXPos;
     private int endYPos;
     private char playerColour;
-    private String gameId;
+    private int gameId;
 
     public int getStartXPos() {
         return startXPos;
@@ -48,11 +48,11 @@ public class GameMove {
         this.playerColour = playerColour;
     }
 
-    public String getGameId() {
+    public int getGameId() {
         return gameId;
     }
 
-    public void setGameId(String gameId) {
+    public void setGameId(int gameId) {
         this.gameId = gameId;
     }
 }
