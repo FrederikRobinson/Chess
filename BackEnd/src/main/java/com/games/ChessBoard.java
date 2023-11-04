@@ -1,7 +1,5 @@
 package com.games;
 
-import java.util.Arrays;
-
 public class ChessBoard {
     private final char WHITE = 'W';
     private final char BLACK = 'B';
@@ -63,13 +61,15 @@ public class ChessBoard {
         return EMPTY;
     }
     public boolean takeTurn(char playerColour,int startXPos, int startYPos,int endXPos, int endYPos){
-        System.out.println(playerColour);
-        System.out.println(currentPlayer);
-        if (playerColour==currentPlayer&&movePiece(startXPos,startYPos,endXPos,endYPos)){
+        if (colourChecks(playerColour,startXPos,startYPos,endXPos,endYPos)&&movePiece(startXPos,startYPos,endXPos,endYPos)){
            nextTurn();
            return true;
         }
         return false;
+    }
+    private boolean colourChecks(char playerColour,int startXPos, int startYPos,int endXPos, int endYPos){
+        if (isPositionInvalid(startXPos,startYPos,endXPos,endYPos)){return false;}
+        return playerColour==currentPlayer && currentPlayer==pieceAt(startXPos,startYPos).getPlayerColour();
     }
     public char getCurrentPlayer(){
         return currentPlayer;
@@ -125,7 +125,6 @@ public class ChessBoard {
     }
 
     public boolean movePiece(int startXPos,int startYPos,int endXPos,int endYPos){
-        System.out.println(""+startXPos+startYPos+endXPos+endYPos);
         if (isMoveValid(startXPos,startYPos,endXPos,endYPos)){
             performMove(startXPos, startYPos, endXPos, endYPos);
             return true;
@@ -134,7 +133,7 @@ public class ChessBoard {
     }
 
     public boolean isMoveValid(int startXPos,int startYPos,int endXPos,int endYPos){
-        if (positionChecks(startXPos, startYPos, endXPos, endYPos)) return false;
+        if (isPositionInvalid(startXPos, startYPos, endXPos, endYPos)) return false;
         boolean moveValid = switch (pieceAt(startXPos, startYPos).getPieceType()) {
             case PAWN -> isMoveValidPawn(startXPos, startYPos, endXPos, endYPos);
             case ROOK -> isMoveValidRook(startXPos, startYPos, endXPos, endYPos);
@@ -147,7 +146,7 @@ public class ChessBoard {
         return moveValid && doesMoveAvoidSelfCheck(startXPos,startYPos,endXPos,endYPos);
     }
 
-    private boolean positionChecks(int startXPos, int startYPos, int endXPos, int endYPos) {
+    private boolean isPositionInvalid(int startXPos, int startYPos, int endXPos, int endYPos) {
         return (!checkPositionIsOnBoard(startXPos, startYPos) || !checkPositionIsOnBoard(endXPos, endYPos) || (startXPos==endXPos && startYPos==endYPos));
     }
 
@@ -321,16 +320,16 @@ public void setCastling(int castlingCode){
 }
 private void performCastling(int endXPos,int endYPos){
         if (endYPos==0 && endXPos==2){
-            performMove(0,0,0,3);
+            performMove(0,0,3,0);
         }
         if (endYPos==0 && endXPos==6){
-            performMove(0,7,0,5);
+            performMove(7,0,5,0);
         }
     if (endYPos==7 && endXPos==2){
-        performMove(7,0,7,3);
+        performMove(0,7,3,7);
     }
     if (endYPos==7 && endXPos==6){
-        performMove(7,7,7,5);
+        performMove(7,7,5,7);
     }
 
 }
@@ -509,7 +508,7 @@ private boolean isTileInCheck(int targetXPos, int targetYPos, char playerColour)
             case BOARD_SIZE_Y-3 ->{
                 placePiece(getPiece(EMPTY,EMPTY),endXPos,4);
                 result=performTempMoveSingle(startXPos,startYPos,endXPos,endYPos);
-                placePiece(getPiece(PAWN,WHITE),endXPos,4);
+                placePiece(getPiece(PAWN,BLACK),endXPos,4);
             }
         }
         return result;
