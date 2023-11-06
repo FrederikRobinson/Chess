@@ -404,6 +404,7 @@ public void setEnPassant(int xPos){
         return isTileInCheck(kingLocation[0],kingLocation[1],playerColour);
 }
 private boolean isTileInCheck(int targetXPos, int targetYPos, char playerColour){
+        System.out.println("We do check");
     for (int xPos = 0; xPos < BOARD_SIZE_X; xPos++) {
         for (int yPos = 0; yPos < BOARD_SIZE_Y; yPos++) {
             if(isPositionEnemy(xPos,yPos,playerColour) && isMoveValid(xPos,yPos,targetXPos,targetYPos)){

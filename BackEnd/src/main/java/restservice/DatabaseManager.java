@@ -5,14 +5,19 @@ import com.games.ChessPiece;
 
 import java.sql.Connection;
 import java.sql.*;
+import java.util.Random;
 
 public class DatabaseManager {
 
     public NewGameResponse createGame() {
-        int gameId = 7;
+
+
         NewGameResponse response = null;
         Connection connection = RestServiceApplication.connection;
+        int gameId = getNewId(connection);
         try {
+
+
             ChessBoard game = new ChessBoard(1);
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "insert into games (Board, PlayerTurn, PlayerOneID, PlayerTwoID, EnPassant, Castling,GameID) values (?,?,?,?,?,?,?)");
@@ -35,7 +40,23 @@ public class DatabaseManager {
             return response;
         }
     }
-
+private int getNewId(Connection connection){
+    Random random = new Random();
+    ResultSet myResult;
+    int gameId;
+    try{
+        do{
+            gameId = random.nextInt();
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from games where GameID = ?");
+            preparedStatement.setInt(1, gameId);
+            myResult = preparedStatement.executeQuery();}
+        while (myResult.next());
+        return gameId;
+    }
+    catch(Exception e){
+        return -1;
+    }
+}
     public boolean updateGame(ChessBoard game, int gameId) {
         Connection connection = RestServiceApplication.connection;
         try {
