@@ -208,4 +208,14 @@ public class CheckTests {
         testBoard.movePiece(4,2,5,3);
         assertTrue(testKingBlack.isEqual(testBoard.pieceAt(4,2)));
     }
+    @Test
+    public void KingCannotMoveIntoCheckFromCheck(){
+        testBoard = new ChessBoard(1);
+        testBoard.movePiece(4,1,4,2);
+        testBoard.movePiece(3,6,3,5);
+        testBoard.movePiece(5,0,1,4);
+        assertTrue(testKingBlack.isEqual(testBoard.pieceAt(4,7)));
+        testBoard.movePiece(4,7,3,6);
+        assertTrue(testKingBlack.isEqual(testBoard.pieceAt(4,7)));
+    }
 }

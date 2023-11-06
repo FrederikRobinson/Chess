@@ -6,12 +6,13 @@ Done:
 - Implemented most of the game logic
 - Skeleton for receiving http requests to backend
 - Skeleton response for http requests to backend
+- Connect backend to a database
 
 For this week:
+- Create user sign up and login pages
+- Connect sign up and login to database
+- Fix moving into check bug
 - Implement promotion (The last piece of game logic)
-- Connect backend to a database
-- Decide upon the required data that needs to be passed from front and back
-- Decide structure of data needed for backend
 - Create a "Start new game" page
 
 Goal for this week:
