@@ -178,4 +178,34 @@ public class CheckTests {
         assertTrue(testKingBlack.isEqual(testBoard.pieceAt(4,4)));
         assertTrue(testKingWhite.isEqual(testBoard.pieceAt(4,2)));
     }
+    @Test
+    public void CannotMoveIntoCheckPawnWhite(){
+        testBoard.placePiece(testKingWhite,4,2);
+        testBoard.placePiece(testPawnBlack,5,4);
+        testBoard.movePiece(4,2,4,3);
+        assertTrue(testKingWhite.isEqual(testBoard.pieceAt(4,2)));
+    }
+    @Test
+    public void CannotMoveRevealCheckBishopWhite(){
+        testBoard.placePiece(testKingWhite,4,2);
+        testBoard.placePiece(testRookWhite,5,3);
+        testBoard.placePiece(testBishopBlack,6,4);
+        testBoard.movePiece(5,3,4,3);
+        assertTrue(testRookWhite.isEqual(testBoard.pieceAt(5,3)));
+    }
+    @Test
+    public void CannotMoveRevealCheckBishopBlack(){
+        testBoard.placePiece(testKingBlack,4,2);
+        testBoard.placePiece(testRookBlack,5,3);
+        testBoard.placePiece(testBishopWhite,6,4);
+        testBoard.movePiece(5,3,4,3);
+        assertTrue(testRookBlack.isEqual(testBoard.pieceAt(5,3)));
+    }
+    @Test
+    public void CannotMoveIntoCheckFromCheckBishopBlack(){
+        testBoard.placePiece(testKingBlack,4,2);
+        testBoard.placePiece(testBishopWhite,6,4);
+        testBoard.movePiece(4,2,5,3);
+        assertTrue(testKingBlack.isEqual(testBoard.pieceAt(4,2)));
+    }
 }
