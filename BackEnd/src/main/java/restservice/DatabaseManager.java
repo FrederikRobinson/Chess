@@ -8,15 +8,56 @@ import java.sql.*;
 import java.util.Random;
 
 public class DatabaseManager {
+    Connection connection = RestServiceApplication.connection;
+
+    public int login(UserDetails user) {
+        int result = 0;
+        try {
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("select * from users where username = ? AND password = ?");
+            preparedStatement.setString(1, user.getUsername());
+            preparedStatement.setString(2, user.getPassword());
+
+            ResultSet myResult = preparedStatement.executeQuery();// myStatement.executeQuery("select * from games");
+            while (myResult.next()) {
+                result = myResult.getInt("userId");
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            result = 0;
+        }
+        return result;
+    }
+
+    public int signUp(UserDetails user) {
+        int userId = getNewId("users", "userId");
+        System.out.println(userId);
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "insert into users (userId, username, password, email, wins, losses,draws) values (?,?,?,?,?,?,?)");
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setString(2, user.getUsername());
+            preparedStatement.setString(3, user.getPassword());
+            preparedStatement.setString(4, user.getEmail());
+            preparedStatement.setInt(5, 0);
+            preparedStatement.setInt(6, 0);
+            preparedStatement.setInt(7, 0);
+            int resultSet = preparedStatement.executeUpdate();
+            System.out.println(resultSet);
+            if (resultSet == 1) {
+                return userId;
+            }
+        } catch (Exception e) {
+            System.out.println("Error creating new user");
+            System.out.println(e);
+        }
+        return 0;
+    }
 
     public NewGameResponse createGame() {
-
-
         NewGameResponse response = null;
-        Connection connection = RestServiceApplication.connection;
-        int gameId = getNewId(connection);
+        int gameId = getNewId("games", "GameID");
         try {
-
 
             ChessBoard game = new ChessBoard(1);
             PreparedStatement preparedStatement = connection.prepareStatement(
@@ -37,28 +78,34 @@ public class DatabaseManager {
         } catch (Exception e) {
             System.out.println("Error updating database");
             System.out.println(e);
-            return response;
+            return null;
         }
     }
-private int getNewId(Connection connection){
-    Random random = new Random();
-    ResultSet myResult;
-    int gameId;
-    try{
-        do{
+
+    private int getNewId(String databaseName, String idColumn) {
+        Random random = new Random();
+        ResultSet myResult;
+        int gameId;
+        try {
+            // do {
             gameId = random.nextInt();
-            PreparedStatement preparedStatement = connection.prepareStatement("select * from games where GameID = ?");
-            preparedStatement.setInt(1, gameId);
-            myResult = preparedStatement.executeQuery();}
-        while (myResult.next());
-        return gameId;
+            // PreparedStatement preparedStatement = connection.prepareStatement("select *
+            // from ? where ? = ?");
+            // preparedStatement.setString(1, databaseName);
+            // preparedStatement.setString(2, idColumn);
+            // preparedStatement.setInt(3, gameId);
+
+            // myResult = preparedStatement.executeQuery();
+            // } while (myResult.next());
+            return gameId;
+        } catch (Exception e) {
+            System.out.println("Error finding new Id for user");
+            System.out.println(e);
+            return 0;
+        }
     }
-    catch(Exception e){
-        return -1;
-    }
-}
+
     public boolean updateGame(ChessBoard game, int gameId) {
-        Connection connection = RestServiceApplication.connection;
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "update games set Board = ?, playerTurn = ?, EnPassant = ?, Castling = ? where GameID = ?");
@@ -78,7 +125,6 @@ private int getNewId(Connection connection){
     }
 
     public ChessBoard getGame(int gameId) {
-        Connection connection = RestServiceApplication.connection;
         ChessBoard result = null;
 
         try {
