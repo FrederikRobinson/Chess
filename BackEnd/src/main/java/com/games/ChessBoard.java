@@ -61,14 +61,14 @@ public class ChessBoard {
         return EMPTY;
     }
     public boolean takeTurn(char playerColour,int startXPos, int startYPos,int endXPos, int endYPos){
-        if (colourChecks(playerColour,startXPos,startYPos,endXPos,endYPos)&&movePiece(startXPos,startYPos,endXPos,endYPos)){
+        if (colourChecks(playerColour,startXPos,startYPos)&&movePiece(startXPos,startYPos,endXPos,endYPos)){
            nextTurn();
            return true;
         }
         return false;
     }
-    private boolean colourChecks(char playerColour,int startXPos, int startYPos,int endXPos, int endYPos){
-        if (isPositionInvalid(startXPos,startYPos,endXPos,endYPos)){return false;}
+    private boolean colourChecks(char playerColour,int startXPos, int startYPos){
+        if (!checkPositionIsOnBoard(startXPos,startYPos)){return false;}
         return playerColour==currentPlayer && currentPlayer==pieceAt(startXPos,startYPos).getPlayerColour();
     }
     public char getCurrentPlayer(){
@@ -125,7 +125,7 @@ public class ChessBoard {
     }
 
     public boolean movePiece(int startXPos,int startYPos,int endXPos,int endYPos){
-        if (isMoveValid(startXPos,startYPos,endXPos,endYPos)){
+        if (isMoveValid(startXPos,startYPos,endXPos,endYPos)&& doesMoveAvoidSelfCheck(startXPos,startYPos,endXPos,endYPos)){
             performMove(startXPos, startYPos, endXPos, endYPos);
             return true;
         }
@@ -134,7 +134,7 @@ public class ChessBoard {
 
     public boolean isMoveValid(int startXPos,int startYPos,int endXPos,int endYPos){
         if (isPositionInvalid(startXPos, startYPos, endXPos, endYPos)) return false;
-        boolean moveValid = switch (pieceAt(startXPos, startYPos).getPieceType()) {
+        return switch (pieceAt(startXPos, startYPos).getPieceType()) {
             case PAWN -> isMoveValidPawn(startXPos, startYPos, endXPos, endYPos);
             case ROOK -> isMoveValidRook(startXPos, startYPos, endXPos, endYPos);
             case BISHOP -> isMoveValidBishop(startXPos, startYPos, endXPos, endYPos);
@@ -143,7 +143,6 @@ public class ChessBoard {
             case KNIGHT -> isMoveValidKnight(startXPos, startYPos, endXPos, endYPos);
             default -> false;
         };
-        return moveValid && doesMoveAvoidSelfCheck(startXPos,startYPos,endXPos,endYPos);
     }
 
     private boolean isPositionInvalid(int startXPos, int startYPos, int endXPos, int endYPos) {
@@ -194,40 +193,40 @@ public class ChessBoard {
         return false;
     }
     private boolean isCastlingLeftWhite(){
-        if (!isPositionEmpty(1,0)||!isPositionEmpty(2,0)||isPositionEmpty(3,0)){
+        if (!isPositionEmpty(1,0)||!isPositionEmpty(2,0)||!isPositionEmpty(3,0)){
             return false;
         }
-        if (isCheck(currentPlayer)){
+        if (isCheck(WHITE)){
             return false;
         }
-        return !(isTileInCheck(2,0,currentPlayer)||isTileInCheck(3,0,currentPlayer));
+        return !(isTileInCheck(2,0,WHITE)||isTileInCheck(3,0,WHITE));
     }
     private boolean isCastlingRightWhite(){
         if (!isPositionEmpty(5,0)||!isPositionEmpty(6,0)){
             return false;
         }
-        if (isCheck(currentPlayer)){
+        if (isCheck(WHITE)){
             return false;
         }
-        return !(isTileInCheck(5,0,currentPlayer)||isTileInCheck(6,0,currentPlayer));
+        return !(isTileInCheck(5,0,WHITE)||isTileInCheck(6,0,WHITE));
     }
     private boolean isCastlingLeftBlack(){
-        if (!isPositionEmpty(1,7)||!isPositionEmpty(2,7)||isPositionEmpty(3,7)){
+        if (!isPositionEmpty(1,7)||!isPositionEmpty(2,7)||!isPositionEmpty(3,7)){
             return false;
         }
-        if (isCheck(currentPlayer)){
+        if (isCheck(BLACK)){
             return false;
         }
-        return !(isTileInCheck(2,7,currentPlayer)||isTileInCheck(3,7,currentPlayer));
+        return !(isTileInCheck(2,7,BLACK)||isTileInCheck(3,7,BLACK));
     }
     private boolean isCastlingRightBlack(){
         if (!isPositionEmpty(5,7)||!isPositionEmpty(6,7)){
             return false;
         }
-        if (isCheck(currentPlayer)){
+        if (isCheck(BLACK)){
             return false;
         }
-        return !(isTileInCheck(5,7,currentPlayer)||isTileInCheck(6,7,currentPlayer));
+        return !(isTileInCheck(5,7,BLACK)||isTileInCheck(6,7,BLACK));
     }
     private boolean isMoveValidQueen(int startXPos,int startYPos,int endXPos,int endYPos){
         if(startXPos!=endXPos && startYPos!=endYPos && Math.abs(startXPos-endXPos)!=Math.abs(startYPos-endYPos)){
@@ -282,7 +281,7 @@ private void specialMove(int startXPos,int startYPos,int endXPos,int endYPos){
             }
             case KING->{if(isCastling(startXPos,startYPos,endXPos,endYPos)){
                 performCastling(endXPos,endYPos);}
-                updateUnmovedKing();
+                updateUnmovedKing(pieceAt(startXPos,startYPos).getPlayerColour());
                 resetEnPassant();
             }
             case ROOK->{updateUnmovedRook(startXPos,startYPos);
@@ -290,11 +289,11 @@ private void specialMove(int startXPos,int startYPos,int endXPos,int endYPos){
             default -> resetEnPassant();
         }
 }
-private void updateUnmovedKing(){
-        if (currentPlayer==WHITE){
+private void updateUnmovedKing(char kingColour){
+        if (kingColour==WHITE){
             kingUnmovedWhite=false;
         }
-        if (currentPlayer==BLACK){
+        if (kingColour==BLACK){
             kingUnmovedBlack=false;
         }
 }
@@ -365,10 +364,16 @@ public void setEnPassant(int xPos){
         if (startXPos == endXPos) {
             return isMoveValidPawnForward(startXPos, startYPos, endXPos, endYPos);
         }
-        if (Math.abs(startXPos-endXPos)==  1) {
+        if (isDiagonallyAhead(startXPos,startYPos,endXPos,endYPos)) {
             return isMoveValidPawnAttack(endXPos, endYPos, pieceAt(startXPos,startYPos).getPlayerColour());
         }
         return false;
+    }
+    private boolean isDiagonallyAhead(int startXPos,int startYPos,int endXPos, int endYPos){
+        if (!(Math.abs(startXPos-endXPos) ==  1)){
+            return false;
+        }
+        return (getDirectionFromColour(pieceAt(startXPos,startYPos).getPlayerColour())==endYPos-startYPos);
     }
     private int getDirectionFromColour(char playerColour){
         return playerColour==WHITE ? 1 : -1;
@@ -404,7 +409,6 @@ public void setEnPassant(int xPos){
         return isTileInCheck(kingLocation[0],kingLocation[1],playerColour);
 }
 private boolean isTileInCheck(int targetXPos, int targetYPos, char playerColour){
-        System.out.println("We do check");
     for (int xPos = 0; xPos < BOARD_SIZE_X; xPos++) {
         for (int yPos = 0; yPos < BOARD_SIZE_Y; yPos++) {
             if(isPositionEnemy(xPos,yPos,playerColour) && isMoveValid(xPos,yPos,targetXPos,targetYPos)){
