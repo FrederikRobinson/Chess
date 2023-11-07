@@ -70,7 +70,6 @@ public class DatabaseManager {
             preparedStatement.setInt(6, 15);
             preparedStatement.setInt(7, gameId);
             int resultSet = preparedStatement.executeUpdate();
-            System.out.println(resultSet);
             if (resultSet == 1) {
                 response = new NewGameResponse(game.getBoard(), gameId);
             }

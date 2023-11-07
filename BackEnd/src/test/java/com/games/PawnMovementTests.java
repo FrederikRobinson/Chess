@@ -266,4 +266,18 @@ public class PawnMovementTests {
         assertTrue(testPawnWhite.isEqual(testBoard.pieceAt(5,3)));
 
     }
+    @Test
+    public void CannotCaptureMoreThanOneTileAheadWhite(){
+        testBoard.placePiece(testPawnWhite,2,3);
+        testBoard.placePiece(testPawnBlack,2,6);
+        testBoard.movePiece(2,3,2,6);
+        assertTrue(testPawnWhite.isEqual(testBoard.pieceAt(2,3)));
+    }
+    @Test
+    public void CannotCaptureMoreThanOneTileAheadBlack(){
+        testBoard.placePiece(testPawnWhite,2,3);
+        testBoard.placePiece(testPawnBlack,2,6);
+        testBoard.movePiece(2,6,2,3);
+        assertTrue(testPawnWhite.isEqual(testBoard.pieceAt(2,3)));
+    }
 }
