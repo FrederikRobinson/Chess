@@ -6,11 +6,13 @@ import Board from './Components/Board.jsx'
 import { login, signUp } from './Utils/apiCalls.js';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import BoardController from './Components/BoardController.jsx';
 
 function App() {
   const navigate = useNavigate();
 
   const [userId, setUserId] = useState(0);
+  const [gameId, setGameId] = useState(0);
 
   const loginHandler = async (username, password) => {
     try {
@@ -24,6 +26,9 @@ function App() {
 
     }
   }
+  const logout = () => {
+    setUserId(0);
+  }
   const signUpHandler = async (username, password, email) => {
     try {
       const newUserId = await signUp(username, password, email);
@@ -36,9 +41,9 @@ function App() {
   }
   return (
     <>
-      <NavBar userId={userId} />
+      <NavBar userId={userId} logout={logout} />
       <Routes>
-        <Route path="/" element={<Board />} />
+        <Route path="/" element={<BoardController />} />
         <Route path="signUp" element={<SignUp signUpHandler={signUpHandler} />} />
         <Route path="login" element={<Login loginHandler={loginHandler} />} />
       </Routes>

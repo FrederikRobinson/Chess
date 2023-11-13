@@ -162,15 +162,15 @@ public class DatabaseManager {
     }
 
     private String getBoardString(ChessPiece[][] board) {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
-                result += board[x][y].getPieceType();
-                result += board[x][y].getPlayerColour();
+                result.append(board[x][y].getPieceType());
+                result.append(board[x][y].getPlayerColour());
             }
         }
         System.out.println(result);
-        return result;
+        return result.toString();
     }
 
     private void placePieces(ChessBoard game, String boardString) {

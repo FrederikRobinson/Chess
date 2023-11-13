@@ -173,10 +173,10 @@ public class ChessBoard {
             return false;
         }
         if (rookUnmoved[0][0] && startXPos==4 && startYPos==0 && endXPos==2 && endYPos==0){
-            return isCastlingLeftWhite();
+            return isCastlingQueenSideWhite();
         }
         if (rookUnmoved[1][0] && startXPos==4 && startYPos==0 && endXPos==6 && endYPos==0){
-            return isCastlingRightWhite();
+            return isCastlingKingSideWhite();
         }
         return false;
     }
@@ -185,14 +185,14 @@ public class ChessBoard {
             return false;
         }
         if (rookUnmoved[0][1] && startXPos==4 && startYPos==7 && endXPos==2 && endYPos==7){
-            return isCastlingLeftBlack();
+            return isCastlingQueenSideBlack();
         }
         if (rookUnmoved[1][1] && startXPos==4 && startYPos==7 && endXPos==6 && endYPos==7){
-            return isCastlingRightBlack();
+            return isCastlingKingSideBlack();
         }
         return false;
     }
-    private boolean isCastlingLeftWhite(){
+    private boolean isCastlingQueenSideWhite(){
         if (!isPositionEmpty(1,0)||!isPositionEmpty(2,0)||!isPositionEmpty(3,0)){
             return false;
         }
@@ -201,7 +201,7 @@ public class ChessBoard {
         }
         return !(isTileInCheck(2,0,WHITE)||isTileInCheck(3,0,WHITE));
     }
-    private boolean isCastlingRightWhite(){
+    private boolean isCastlingKingSideWhite(){
         if (!isPositionEmpty(5,0)||!isPositionEmpty(6,0)){
             return false;
         }
@@ -210,7 +210,7 @@ public class ChessBoard {
         }
         return !(isTileInCheck(5,0,WHITE)||isTileInCheck(6,0,WHITE));
     }
-    private boolean isCastlingLeftBlack(){
+    private boolean isCastlingQueenSideBlack(){
         if (!isPositionEmpty(1,7)||!isPositionEmpty(2,7)||!isPositionEmpty(3,7)){
             return false;
         }
@@ -219,7 +219,7 @@ public class ChessBoard {
         }
         return !(isTileInCheck(2,7,BLACK)||isTileInCheck(3,7,BLACK));
     }
-    private boolean isCastlingRightBlack(){
+    private boolean isCastlingKingSideBlack(){
         if (!isPositionEmpty(5,7)||!isPositionEmpty(6,7)){
             return false;
         }
