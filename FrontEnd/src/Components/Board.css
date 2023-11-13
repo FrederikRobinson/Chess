@@ -32,6 +32,7 @@
 }
 
 .tileContent {
+    font-family: ms gothic;
     display: flex;
     justify-content: center;
     align-items: center;

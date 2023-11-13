@@ -1,0 +1,16 @@
+:root {
+    background-color: aquamarine;
+}
+
+body {
+    background-color: aquamarine;
+}
+
+.nav-item {
+    padding: 1rem;
+    justify-content: center
+}
+
+.navbar {
+    margin-bottom: 1rem;
+}
