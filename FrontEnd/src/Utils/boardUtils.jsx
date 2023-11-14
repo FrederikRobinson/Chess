@@ -84,3 +84,6 @@ export const convertToUnicodePiece = (pieceColour, pieceType) => {
 export const loginChecks = (username, password) => {
     return !username.length == 0 && !password.length == 0
 }
+export const gameCodeChecks = (gameCode) => {
+    return gameCode.length == 0 || isNaN(parseInt(gameCode))
+}

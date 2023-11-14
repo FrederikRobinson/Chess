@@ -7,22 +7,24 @@ Done:
 - Skeleton for receiving http requests to backend
 - Skeleton response for http requests to backend
 - Connect backend to a database
+- - Create user sign up and login pages
+- - Connect sign up and login to database
 
 For this week:
-- Create user sign up and login pages
-- Connect sign up and login to database
-- Fix moving into check bug
+
 - Implement promotion (The last piece of game logic)
 - Create a "Start new game" page
+- Allow creation of games tied to users
+- Allow multiple users to play a game
 
 Goal for this week:
-- Be able to start a game and play through it from the front end on a single computer
+- Allow multiple users to play a game
 
 ToDo:
+- Improve the look of the css
 - Add more tests for better coverage
+- Refactor to clean up the backend
 - Create win/loss screen
-- Implement game to be played across 2 computers
-- Create Login system
 - Record a win loss record for each account
 
 Possible extensions:

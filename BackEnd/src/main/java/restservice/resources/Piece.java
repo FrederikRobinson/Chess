@@ -1,4 +1,4 @@
-package restservice;
+package restservice.resources;
 
 public class Piece {
     public static char[][][] board= {{{'A','A'},{'B','B'},{'C','C'},{'X','X'},{'X','X'},{'X','X'},{'X','X'},{'X','X'}},

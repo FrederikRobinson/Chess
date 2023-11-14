@@ -27,6 +27,9 @@ function NavBar({ userId, logout }) {
                                 {loggedIn && <li className="nav-item">
                                     <NavLink to="/" onClick={logout} >Logout</NavLink>
                                 </li>}
+                                {loggedIn && <li className="nav-item">
+                                    <NavLink to="/joinGame">Join Game</NavLink>
+                                </li>}
                             </ul>
                         </div>
                     </div>

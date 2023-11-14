@@ -1,7 +1,11 @@
-package restservice;
+package restservice.controllers;
 
 import com.games.ChessBoard;
 import org.springframework.web.bind.annotation.*;
+import restservice.services.DatabaseManager;
+import restservice.resources.GameMove;
+import restservice.resources.GameState;
+import restservice.resources.NewGameResponse;
 
 @RestController
 public class MoveController {
@@ -31,8 +35,21 @@ public class MoveController {
 //        return databaseManager.createGame();
 //    }
     @CrossOrigin(origins = "http://localhost:5173")
-    @GetMapping("/makeMove")
-    public NewGameResponse makeGame(){
-        return databaseManager.createGame();
+    @PostMapping("/createGame")
+    public NewGameResponse makeGame(@RequestBody int userId){
+        return databaseManager.createGame(userId);
+    }
+
+    @CrossOrigin(origins = "http://localhost:5173")
+    @PostMapping("/getGame")
+    public GameState getGame(@RequestBody int gameId){
+        ChessBoard chessBoard = databaseManager.getGame(gameId);
+        return new GameState(chessBoard.getBoard(), chessBoard.getCurrentPlayer());
+    }
+    @CrossOrigin(origins = "http://localhost:5173")
+    @PostMapping("/joinGame")
+    public GameState joinGame(@RequestBody int userId,int gameId){
+        ChessBoard chessBoard = databaseManager.joinGame(userId,gameId);
+        return new GameState(chessBoard.getBoard(), chessBoard.getCurrentPlayer());
     }
 }

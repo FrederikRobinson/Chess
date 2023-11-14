@@ -1,4 +1,4 @@
-package restservice;
+package restservice.resources;
 
 public class GameMove {
     private int startXPos;

@@ -5,7 +5,7 @@ import './Board.css';
 import { createBoard, emptyBoard, nextPlayer } from '../Utils/boardUtils.jsx'
 import { useEffect, useState } from 'react';
 import { makeMove, createGame } from '../Utils/apiCalls.js';
-const BoardController = () => {
+const BoardController = ({ userId }) => {
     const [gameId, setGameId] = useState(0);
     const [board, setBoard] = useState(emptyBoard);
     const [player, setPlayer] = useState('X');
@@ -20,7 +20,7 @@ const BoardController = () => {
 
     const handleCreateGame = async () => {
         try {
-            const res = await createGame();
+            const res = await createGame(userId);
             console.dir(res);
             setGameId(res.gameId);
             setBoard(res.board);
@@ -49,12 +49,7 @@ const BoardController = () => {
             setSelectedTile([xPos, yPos]);
         }
         else {
-            if (gameId == 0) {
-                handleCreateGame();
-            }
-            else {
-                handleMakeMove(selectedTile[0], selectedTile[1], xPos, yPos, currentPlayer, gameId);
-            }
+            handleMakeMove(selectedTile[0], selectedTile[1], xPos, yPos, currentPlayer, gameId);
         }
     }
     const isTileSelected = (xPos, yPos) => { return xPos == selectedTile[0] && yPos == selectedTile[1] ? "Highlighted" : ""; }

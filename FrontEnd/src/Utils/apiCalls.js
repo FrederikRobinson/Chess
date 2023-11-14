@@ -8,7 +8,6 @@ export const makeMove = async (startXPos, startYPos, endXPos, endYPos, playerCol
     catch (e) {
         return { error: e.response.data }
     }
-    // return notEmptyBoard;
 }
 export const signUp = async (username, password, email) => {
     try {
@@ -18,7 +17,6 @@ export const signUp = async (username, password, email) => {
     catch (e) {
         return { error: e.response.data }
     }
-    // return notEmptyBoard;
 }
 export const login = async (username, password) => {
     try {
@@ -28,11 +26,10 @@ export const login = async (username, password) => {
     catch (e) {
         return { error: e.response.data }
     }
-    // return notEmptyBoard;
 }
-export const createGame = async () => {
+export const createGame = async (userId) => {
     try {
-        const res = await axios.get("http://localhost:8080/makeMove");//, { startXPos, startYPos, endXPos, endYPos, playerColour, gameId });
+        const res = await axios.post("http://localhost:8080/createGame", { userId });//, { startXPos, startYPos, endXPos, endYPos, playerColour, gameId });
         console.log("ThisIsHere");
         console.dir(res);
         return res.data;
@@ -42,5 +39,30 @@ export const createGame = async () => {
         console.dir(e);
         return { error: e.response.data }
     }
-    // return notEmptyBoard;
+}
+export const getGame = async (gameId) => {
+    try {
+        const res = await axios.post("http://localhost:8080/getGame", { gameId });//, { startXPos, startYPos, endXPos, endYPos, playerColour, gameId });
+        console.log("ThisIsHere");
+        console.dir(res);
+        return res.data;
+    }
+    catch (e) {
+        console.log("Here");
+        console.dir(e);
+        return { error: e.response.data }
+    }
+}
+export const joinGame = async (userId, gameId) => {
+    try {
+        const res = await axios.post("http://localhost:8080/joinGame", { userId, gameId });//, { startXPos, startYPos, endXPos, endYPos, playerColour, gameId });
+        console.log("ThisIsHere");
+        console.dir(res);
+        return res.data;
+    }
+    catch (e) {
+        console.log("Here");
+        console.dir(e);
+        return { error: e.response.data }
+    }
 }
