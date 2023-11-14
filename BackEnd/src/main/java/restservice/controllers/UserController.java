@@ -1,7 +1,9 @@
-package restservice;
+package restservice.controllers;
 
 
 import org.springframework.web.bind.annotation.*;
+import restservice.services.DatabaseManager;
+import restservice.resources.UserDetails;
 
 @RestController
 public class UserController {

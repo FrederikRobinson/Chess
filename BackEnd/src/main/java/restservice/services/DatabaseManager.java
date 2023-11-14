@@ -1,7 +1,10 @@
-package restservice;
+package restservice.services;
 
 import com.games.ChessBoard;
 import com.games.ChessPiece;
+import restservice.resources.NewGameResponse;
+import restservice.RestServiceApplication;
+import restservice.resources.UserDetails;
 
 import java.sql.Connection;
 import java.sql.*;
@@ -54,9 +57,12 @@ public class DatabaseManager {
         return 0;
     }
 
-    public NewGameResponse createGame() {
+    public NewGameResponse createGame(int userId) {
+        Random random = new Random();
         NewGameResponse response = null;
         int gameId = getNewId("games", "GameID");
+        int[] playerIds=new int[2];
+        playerIds[random.nextInt(2)]=userId;
         try {
 
             ChessBoard game = new ChessBoard(1);
@@ -64,8 +70,8 @@ public class DatabaseManager {
                     "insert into games (Board, PlayerTurn, PlayerOneID, PlayerTwoID, EnPassant, Castling,GameID) values (?,?,?,?,?,?,?)");
             preparedStatement.setString(1, getBoardString(game.getBoard()));
             preparedStatement.setString(2, String.valueOf(game.getCurrentPlayer()));
-            preparedStatement.setInt(3, 7);
-            preparedStatement.setInt(4, 8);
+            preparedStatement.setInt(3, playerIds[0]);
+            preparedStatement.setInt(4, playerIds[1]);
             preparedStatement.setInt(5, -1);
             preparedStatement.setInt(6, 15);
             preparedStatement.setInt(7, gameId);
@@ -135,16 +141,70 @@ public class DatabaseManager {
             // PlayerOneID, PlayerTwoID, EnPassant, Castling) values (1,
             // 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
             // 'W', 40, 37, 3, 2)");
-            ResultSet myResult = preparedStatement.executeQuery();// myStatement.executeQuery("select * from games");
-            while (myResult.next()) {
-                result = convertToGame(myResult);
-                System.out.println(myResult.getString("PlayerTurn"));
+            ResultSet resultSet = preparedStatement.executeQuery();// myStatement.executeQuery("select * from games");
+            while (resultSet.next()) {
+                result = convertToGame(resultSet);
             }
         } catch (Exception e) {
             System.out.println(e);
         }
         return result;
     }
+    public ChessBoard joinGame(int userId,int gameId) {
+        ChessBoard result = null;
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from games where GameID = ?");
+            preparedStatement.setInt(1, gameId);
+
+            ResultSet resultSet = preparedStatement.executeQuery();// myStatement.executeQuery("select * from games");
+            while (resultSet.next()) {
+                if (resultSet.getInt("PlayerOneID")==0){
+                    addPlayer(userId,gameId,0);
+                }
+                else if(resultSet.getInt("PlayerTwoID")==0){
+                    addPlayer(userId,gameId,1);
+                }
+                result = convertToGame(resultSet);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return result;
+    }
+    public void addPlayer(int userId,int gameId,int playerPosition){
+        String playerIdColumn = playerPosition==0?"PlayerOneID":playerPosition==1?"PlayerTwoID":"";
+        try{
+        PreparedStatement preparedStatement = connection.prepareStatement(
+                "update games set ? = ? where GameID = ?");
+        preparedStatement.setString(1, playerIdColumn);
+        preparedStatement.setInt(2, userId);
+        preparedStatement.setInt(3, gameId);
+        preparedStatement.executeUpdate();}
+        catch (Exception e){
+            System.out.println("error adding player to game");
+            System.out.println(e);
+        }
+    }
+//    public ChessBoard checkGame(int userId,int gameId) {
+//        ChessBoard result = null;
+//
+//        try {
+//            PreparedStatement preparedStatement = connection.prepareStatement("select * from games where GameID = ?");
+//            preparedStatement.setInt(1, gameId);
+//            ResultSet resultSet = preparedStatement.executeQuery();// myStatement.executeQuery("select * from games");
+//            while (resultSet.next()) {
+//                if (resultSet.getInt("PlayerOneID")==userId&&resultSet.getString("PlayerTurn")=="W"){
+//
+//
+//                }
+//                System.out.println(resultSet.getString("PlayerTurn"));
+//            }
+//        } catch (Exception e) {
+//            System.out.println(e);
+//        }
+//        return result;
+//    }
 
     private ChessBoard convertToGame(ResultSet resultSet) {
         ChessBoard newBoard = new ChessBoard();

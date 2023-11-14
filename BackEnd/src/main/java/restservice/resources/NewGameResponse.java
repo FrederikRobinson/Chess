@@ -1,4 +1,4 @@
-package restservice;
+package restservice.resources;
 
 import com.games.ChessBoard;
 import com.games.ChessPiece;
