@@ -12,15 +12,15 @@ Done:
 
 For this week:
 
-- Implement promotion (The last piece of game logic)
 - Create a "Start new game" page
 - Allow creation of games tied to users
-- Allow multiple users to play a game
+- Allow multiple users to play a game using web sockets
 
 Goal for this week:
 - Allow multiple users to play a game
 
 ToDo:
+- Implement promotion (The last piece of game logic)
 - Improve the look of the css
 - Add more tests for better coverage
 - Refactor to clean up the backend
@@ -28,5 +28,6 @@ ToDo:
 - Record a win loss record for each account
 
 Possible extensions:
+- Notification of your turn
 - Create a basic AI opponent
 - Allow other games to be played on the board

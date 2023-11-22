@@ -35,7 +35,7 @@ const Login = ({ loginHandler }) => {
                 />
             </div>
             <div className="form-group">
-                <input type="submit" value="Submit" className={`btn-primary`} disabled={!loginChecks(username, password)} />
+                <input type="submit" value="Submit" className={`btn-primary`} disabled={loginChecks(username, password)} />
             </div>
         </form>
     )

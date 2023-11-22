@@ -5,6 +5,7 @@ import com.games.ChessPiece;
 import restservice.resources.NewGameResponse;
 import restservice.RestServiceApplication;
 import restservice.resources.UserDetails;
+import websocket.resources.JoinGameResponse;
 
 import java.sql.Connection;
 import java.sql.*;
@@ -62,7 +63,8 @@ public class DatabaseManager {
         NewGameResponse response = null;
         int gameId = getNewId("games", "GameID");
         int[] playerIds=new int[2];
-        playerIds[random.nextInt(2)]=userId;
+        int mainPlayerTurnNumber = random.nextInt(2);
+        playerIds[mainPlayerTurnNumber]=userId;
         try {
 
             ChessBoard game = new ChessBoard(1);
@@ -77,7 +79,7 @@ public class DatabaseManager {
             preparedStatement.setInt(7, gameId);
             int resultSet = preparedStatement.executeUpdate();
             if (resultSet == 1) {
-                response = new NewGameResponse(game.getBoard(), gameId);
+                response = new NewGameResponse(game.getBoard(), gameId,mainPlayerTurnNumber,'W');
             }
             return response;
         } catch (Exception e) {
@@ -150,8 +152,9 @@ public class DatabaseManager {
         }
         return result;
     }
-    public ChessBoard joinGame(int userId,int gameId) {
+    public JoinGameResponse joinGame(int userId, int gameId) {
         ChessBoard result = null;
+        JoinGameResponse joinGameResponse = null;
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("select * from games where GameID = ?");
@@ -159,18 +162,31 @@ public class DatabaseManager {
 
             ResultSet resultSet = preparedStatement.executeQuery();// myStatement.executeQuery("select * from games");
             while (resultSet.next()) {
-                if (resultSet.getInt("PlayerOneID")==0){
-                    addPlayer(userId,gameId,0);
-                }
-                else if(resultSet.getInt("PlayerTwoID")==0){
-                    addPlayer(userId,gameId,1);
-                }
+                int playerNumber = getPlayerNumber(resultSet,userId,gameId);
                 result = convertToGame(resultSet);
+                joinGameResponse = new JoinGameResponse(result.getBoard(),playerNumber, result.getCurrentPlayer());
             }
         } catch (Exception e) {
             System.out.println(e);
         }
-        return result;
+        return joinGameResponse;
+    }
+    private int getPlayerNumber(ResultSet resultSet,int userId,int gameId)throws Exception {
+        if (resultSet.getInt("PlayerOneID")==userId){
+            return 0;
+        }
+        if (resultSet.getInt("PlayerTwoID")==userId){
+            return 1;
+        }
+        if(resultSet.getInt("PlayerOneID")==0){
+            addPlayer(userId,gameId,0);
+            return 0;
+        }
+        if(resultSet.getInt("PlayerTwoID")==0){
+            addPlayer(userId,gameId,1);
+            return 1;
+        }
+        return -1;
     }
     public void addPlayer(int userId,int gameId,int playerPosition){
         String playerIdColumn = playerPosition==0?"PlayerOneID":playerPosition==1?"PlayerTwoID":"";
