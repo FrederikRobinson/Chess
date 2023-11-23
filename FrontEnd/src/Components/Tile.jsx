@@ -14,12 +14,13 @@ const Tile = ({ xPos, yPos, piece, functions }) => {
     )
 }
 
-// Tile.propTypes = {
-//     xPos: PropTypes.string.isRequired,
-//     yPos: PropTypes.number.isRequired,
-//     piece: PropTypes.arrayOf(
-//         PropTypes.string
-//     ).isRequired
-// }
+Tile.propTypes = {
+    xPos: PropTypes.string.isRequired,
+    yPos: PropTypes.number.isRequired,
+    piece: PropTypes.arrayOf(
+        PropTypes.string
+    ).isRequired,
+    functions: PropTypes.object
+}
 
 export default Tile;

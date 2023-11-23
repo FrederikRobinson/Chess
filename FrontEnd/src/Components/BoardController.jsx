@@ -2,6 +2,7 @@ import NewGame from "./NewGame";
 import Board from "./Board";
 import JoinGame from "./JoinGame.jsx";
 import './Board.css';
+import PropTypes from "prop-types"
 import { Client } from '@stomp/stompjs'
 import { createBoard, emptyBoard, nextPlayer, getColourFromTurnNumber } from '../Utils/boardUtils.jsx'
 import { useEffect, useState } from 'react';
@@ -11,21 +12,7 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 const BoardController = ({ userId }) => {
 
     const navigate = useNavigate();
-    const [stompClient, setStompClient] = useState(new StompJs.Client({
-        brokerURL: 'ws://localhost:8080/gameConnection',
-        onConnect: () => {
-            stompClient.subscribe('/topic/' + gameId, (res) => {
-                if (!connected) {
-                    setBoard(res.board);
-                    setSelectedTile([-1, -1]);
-                    setPlayer(getColourFromTurnNumber(res.playerNumber))
-                    setCurrentPlayer(res.playerTurn);
-                    setConnected(true)
-                    console.log("ITS WORKING");
-                }
-            })
-        }
-    }));
+
     const [gameId, setGameId] = useState(0);
     const [board, setBoard] = useState(emptyBoard);
     const [player, setPlayer] = useState('X');
@@ -35,80 +22,20 @@ const BoardController = ({ userId }) => {
 
 
 
-    //<Tile xPos={xPos} yPos={yPos} piece={piece} key={`${xPos} ${yPos}`} / >
-    // useEffect(() => {
-    //     setBoard
-    // }, [])
-    // useEffect(() => {
-    //     if (currentPlayer !== player) {
-    //         handleGetBoard();
-    //     }
-    // }, [currentPlayer])
-    // const delay = ms => new Promise(res => setTimeout(res, ms));
-    // const handleGetBoard = async () => {
-    //     console.log("It begins");
-    //     while (currentPlayer !== player) {
-    //         let res = await getGame(gameId)
-    //         if (res.playerTurn === currentPlayer) {
-    //             await delay(2000);
-    //             console.log("This shouldn't be called a lot");
-    //         }
-    //     }
-    //     console.log("it ends");
-    // }
     const handleCreateGame = async () => {
-        try {
-            const res = await createGame(userId);
-            console.dir(res);
+        const res = await createGame(userId);
+        if (!res.error) {
+            // console.dir(res);
             setGameId(res.gameId);
-            handleJoinGame(userId, res.gameId);
-            // setBoard(res.board);
-            // setSelectedTile([-1, -1]);
-            // setPlayer(getColourFromTurnNumber(res.playerNumber))
-            // setCurrentPlayer("W");
+            // handleJoinGame(userId, res.gameId);
+            setBoard(res.board);
+            setSelectedTile([-1, -1]);
+            setPlayer(getColourFromTurnNumber(res.playerNumber))
+            setCurrentPlayer("W");
         }
-        catch {
 
-        }
     }
-    const handleJoinGame = async (gameCode) => {
-        try {
-            setGameId(gameCode)
-            stompClient.onStompError = function (frame) {
-                // Will be invoked in case of error encountered at Broker
-                // Bad login/passcode typically will cause an error
-                // Complaint brokers will set `message` header with a brief message. Body may contain details.
-                // Compliant brokers will terminate the connection after any error
-                console.log('Broker reported error: ' + frame.headers['message']);
-                console.log('Additional details: ' + frame.body);
-            };
-            stompClient.activate();
-            // await stompClient.subscribe('/topic/' + gameId, (res) => {
-            //     if (!connected) {
-            //         setBoard(res.board);
-            //         setSelectedTile([-1, -1]);
-            //         setPlayer(getColourFromTurnNumber(res.playerNumber))
-            //         setCurrentPlayer(res.playerTurn);
-            //         setConnected(true)
-            //         console.log("ITS WORKING");
-            // navigate("/play/game");
 
-            // }
-            // });
-            // await stompClient.publish({
-            //     destination: "/app/joinGame",
-            //     body: JSON.stringify({ userId, gameId })
-            // });
-            // await stompClient.publish({
-            //     destination: "/app/makeMove",
-            //     body: JSON.stringify({ startXPos, startYPos, endXPos, endYPos, playerColour, gameId })
-            // });
-
-        }
-        catch {
-
-        }
-    }
     const handleMakeMove = async (startXPos, startYPos, endXPos, endYPos, playerColour, gameId) => {
         try {
             const res = await makeMove(startXPos, startYPos, endXPos, endYPos, playerColour, gameId);
@@ -123,12 +50,12 @@ const BoardController = ({ userId }) => {
         }
     }
     const handleTileSelection = (xPos, yPos) => {
-        if (selectedTile[0] == -1) {
-            setSelectedTile([xPos, yPos]);
-        }
-        else {
+        selectedTile[0] == -1
+            ?
+            setSelectedTile([xPos, yPos])
+            :
             handleMakeMove(selectedTile[0], selectedTile[1], xPos, yPos, currentPlayer, gameId);
-        }
+
     }
 
     const isTileSelected = (xPos, yPos) => { return xPos == selectedTile[0] && yPos == selectedTile[1] ? "Highlighted" : ""; }
@@ -136,7 +63,102 @@ const BoardController = ({ userId }) => {
     const tiles = createBoard(board, functionsForTiles);
     return (
         <>
-            <div>Does this work</div>
+
+            {gameId === 0 && <NewGame handleCreateGame={handleCreateGame} />}
+            {gameId !== 0 && <Board tiles={tiles} currentPlayer={currentPlayer} selectedTile={selectedTile} />}
+
+
+        </>
+    )
+}
+
+BoardController.propTypes = {
+    userId: PropTypes.number
+}
+export default BoardController;
+
+
+
+
+
+// const [stompClient, setStompClient] = useState(new Client({
+//     brokerURL: 'ws://localhost:8080/gameConnection',
+//     onConnect: () => {
+//         stompClient.subscribe('/topic/' + gameId, (res) => {
+//             // if (!connected) {
+//             //     setBoard(res.board);
+//             //     setSelectedTile([-1, -1]);
+//             //     setPlayer(getColourFromTurnNumber(res.playerNumber))
+//             //     setCurrentPlayer(res.playerTurn);
+//             //     setConnected(true)
+//             console.log("ITS WORKING");
+//             // }
+//         })
+//     }
+// }));
+
+
+//<Tile xPos={xPos} yPos={yPos} piece={piece} key={`${xPos} ${yPos}`} / >
+// useEffect(() => {
+//     setBoard
+// }, [])
+// useEffect(() => {
+//     if (currentPlayer !== player) {
+//         handleGetBoard();
+//     }
+// }, [currentPlayer])
+// const delay = ms => new Promise(res => setTimeout(res, ms));
+// const handleGetBoard = async () => {
+//     console.log("It begins");
+//     while (currentPlayer !== player) {
+//         let res = await getGame(gameId)
+//         if (res.playerTurn === currentPlayer) {
+//             await delay(2000);
+//             console.log("This shouldn't be called a lot");
+//         }
+//     }
+//     console.log("it ends");
+// }
+
+// const handleJoinGame = async (gameCode) => {
+//     try {
+//         setGameId(gameCode)
+//         stompClient.onStompError = function (frame) {
+//             // Will be invoked in case of error encountered at Broker
+//             // Bad login/passcode typically will cause an error
+//             // Complaint brokers will set `message` header with a brief message. Body may contain details.
+//             // Compliant brokers will terminate the connection after any error
+//             console.log('Broker reported error: ' + frame.headers['message']);
+//             console.log('Additional details: ' + frame.body);
+//         };
+//         stompClient.activate();
+//         // await stompClient.subscribe('/topic/' + gameId, (res) => {
+//         //     if (!connected) {
+//         //         setBoard(res.board);
+//         //         setSelectedTile([-1, -1]);
+//         //         setPlayer(getColourFromTurnNumber(res.playerNumber))
+//         //         setCurrentPlayer(res.playerTurn);
+//         //         setConnected(true)
+//         //         console.log("ITS WORKING");
+//         // navigate("/play/game");
+
+//         // }
+//         // });
+//         // await stompClient.publish({
+//         //     destination: "/app/joinGame",
+//         //     body: JSON.stringify({ userId, gameId })
+//         // });
+//         // await stompClient.publish({
+//         //     destination: "/app/makeMove",
+//         //     body: JSON.stringify({ startXPos, startYPos, endXPos, endYPos, playerColour, gameId })
+//         // });
+
+//     }
+//     catch {
+
+//     }
+// }
+/*
             <Routes>
                 <Route path="/joinGame" element={<JoinGame handleJoinGame={handleJoinGame} />} />
                 <Route path="/game" element={
@@ -144,9 +166,4 @@ const BoardController = ({ userId }) => {
                         {gameId === 0 && <NewGame handleCreateGame={handleCreateGame} />}
                         {gameId !== 0 && <Board tiles={tiles} currentPlayer={currentPlayer} selectedTile={selectedTile} />}
                     </>} />
-            </Routes>
-
-        </>
-    )
-}
-export default BoardController;
+            </Routes> */
