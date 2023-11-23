@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { gameCodeChecks } from "../Utils/boardUtils";
 
 const JoinGame = ({ handleJoinGame }) => {
     const [gameCode, setGameCode] = useState("");
     const handleSubmit = () => {
+        event.preventDefault()
         handleJoinGame(gameCode);
     }
     return (
@@ -12,7 +14,7 @@ const JoinGame = ({ handleJoinGame }) => {
                     <label htmlFor="gameId">Enter game code:&nbsp;</label>
                     <input
                         type="text"
-                        name="Game Code"
+                        name="gameId"
                         placeholder=""
                         className="form-control"
                         value={gameCode}

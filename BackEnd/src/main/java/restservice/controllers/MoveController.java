@@ -6,6 +6,7 @@ import restservice.services.DatabaseManager;
 import restservice.resources.GameMove;
 import restservice.resources.GameState;
 import restservice.resources.NewGameResponse;
+import websocket.resources.JoinGameResponse;
 
 @RestController
 public class MoveController {
@@ -48,8 +49,7 @@ public class MoveController {
     }
     @CrossOrigin(origins = "http://localhost:5173")
     @PostMapping("/joinGame")
-    public GameState joinGame(@RequestBody int userId,int gameId){
-        ChessBoard chessBoard = databaseManager.joinGame(userId,gameId);
-        return new GameState(chessBoard.getBoard(), chessBoard.getCurrentPlayer());
+    public JoinGameResponse joinGame(@RequestBody int userId,int gameId){
+        return databaseManager.joinGame(userId,gameId);
     }
 }

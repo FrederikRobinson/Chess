@@ -10,7 +10,7 @@ import BoardController from './Components/BoardController.jsx';
 function App() {
   const navigate = useNavigate();
 
-  const [userId, setUserId] = useState(0);
+  const [userId, setUserId] = useState(-1686273342);
   const [gameId, setGameId] = useState(0);
 
   const loginHandler = async (username, password) => {
@@ -43,7 +43,7 @@ function App() {
     <>
       <NavBar userId={userId} logout={logout} />
       <Routes>
-        <Route path="/play" element={<BoardController userId={userId} />} />
+        <Route path="/play/*" element={<BoardController userId={userId} />} />
         <Route path="/signUp" element={<SignUp signUpHandler={signUpHandler} />} />
         <Route path="/login" element={<Login loginHandler={loginHandler} />} />
       </Routes>

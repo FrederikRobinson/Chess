@@ -2,14 +2,29 @@ import NewGame from "./NewGame";
 import Board from "./Board";
 import JoinGame from "./JoinGame.jsx";
 import './Board.css';
+import { Client } from '@stomp/stompjs'
 import { createBoard, emptyBoard, nextPlayer, getColourFromTurnNumber } from '../Utils/boardUtils.jsx'
 import { useEffect, useState } from 'react';
 import { makeMove, createGame, getGame, joinGame } from '../Utils/apiCalls.js';
 import { Routes, Route, useNavigate } from "react-router-dom";
+
 const BoardController = ({ userId }) => {
+
     const navigate = useNavigate();
     const [stompClient, setStompClient] = useState(new StompJs.Client({
-        brokerURL: 'ws://localhost:8080/gameConnection'
+        brokerURL: 'ws://localhost:8080/gameConnection',
+        onConnect: () => {
+            stompClient.subscribe('/topic/' + gameId, (res) => {
+                if (!connected) {
+                    setBoard(res.board);
+                    setSelectedTile([-1, -1]);
+                    setPlayer(getColourFromTurnNumber(res.playerNumber))
+                    setCurrentPlayer(res.playerTurn);
+                    setConnected(true)
+                    console.log("ITS WORKING");
+                }
+            })
+        }
     }));
     const [gameId, setGameId] = useState(0);
     const [board, setBoard] = useState(emptyBoard);
@@ -58,22 +73,32 @@ const BoardController = ({ userId }) => {
     }
     const handleJoinGame = async (gameCode) => {
         try {
-            await stompClient.activate();
-            await stompClient.subscribe('/topic/' + gameId, (res) => {
-                if (!connected) {
-                    setBoard(res.board);
-                    setSelectedTile([-1, -1]);
-                    setPlayer(getColourFromTurnNumber(res.playerNumber))
-                    setCurrentPlayer(res.playerTurn);
-                    setConnected(true)
-                    navigate("/play/game");
+            setGameId(gameCode)
+            stompClient.onStompError = function (frame) {
+                // Will be invoked in case of error encountered at Broker
+                // Bad login/passcode typically will cause an error
+                // Complaint brokers will set `message` header with a brief message. Body may contain details.
+                // Compliant brokers will terminate the connection after any error
+                console.log('Broker reported error: ' + frame.headers['message']);
+                console.log('Additional details: ' + frame.body);
+            };
+            stompClient.activate();
+            // await stompClient.subscribe('/topic/' + gameId, (res) => {
+            //     if (!connected) {
+            //         setBoard(res.board);
+            //         setSelectedTile([-1, -1]);
+            //         setPlayer(getColourFromTurnNumber(res.playerNumber))
+            //         setCurrentPlayer(res.playerTurn);
+            //         setConnected(true)
+            //         console.log("ITS WORKING");
+            // navigate("/play/game");
 
-                }
-            });
-            await stompClient.publish({
-                destination: "/app/joinGame",
-                body: JSON.stringify({ userId, gameId })
-            });
+            // }
+            // });
+            // await stompClient.publish({
+            //     destination: "/app/joinGame",
+            //     body: JSON.stringify({ userId, gameId })
+            // });
             // await stompClient.publish({
             //     destination: "/app/makeMove",
             //     body: JSON.stringify({ startXPos, startYPos, endXPos, endYPos, playerColour, gameId })
@@ -111,6 +136,7 @@ const BoardController = ({ userId }) => {
     const tiles = createBoard(board, functionsForTiles);
     return (
         <>
+            <div>Does this work</div>
             <Routes>
                 <Route path="/joinGame" element={<JoinGame handleJoinGame={handleJoinGame} />} />
                 <Route path="/game" element={
