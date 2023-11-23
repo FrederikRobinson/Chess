@@ -1,4 +1,18 @@
 # Chess
+Why
+If you don't have time to set up a game on a real board or the person you want to play against is not nearby this app allows you to play chess anywhere fast.
+
+How
+Using Node for the frontend server,React for display,Stomp for websocket connection,Axios for RESTapi,Springboot for backend server,MySQL database
+
+What
+The login system uses a RESTapi to sign in where you can create or join games of chess against other users. The games themselves are handled using websockets for communicating moves
+
+Config info
+How to run
+
+
+To Do List
 Done:
 - Display a board
 - Add state to allow selecting tiles

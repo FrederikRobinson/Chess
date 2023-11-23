@@ -16,7 +16,7 @@ function NavBar({ userId, logout }) {
                                 </li>
                                 {loggedIn &&
                                     <li className="nav-item">
-                                        <NavLink to="/">New Game</NavLink>
+                                        <NavLink to="/play">New Game</NavLink>
                                     </li>}
                                 {!loggedIn && <li className="nav-item">
                                     <NavLink to="/login">Login</NavLink>
@@ -40,9 +40,10 @@ function NavBar({ userId, logout }) {
     )
 }
 
-// NavBar.propTypes = {
-//     
-// }
+NavBar.propTypes = {
+    userId: PropTypes.number,
+    logout: PropTypes.func
+}
 
 
 export default NavBar

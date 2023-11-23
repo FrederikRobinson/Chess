@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PropTypes from "prop-types"
 import { gameCodeChecks } from "../Utils/boardUtils";
 
 const JoinGame = ({ handleJoinGame }) => {
@@ -27,6 +28,10 @@ const JoinGame = ({ handleJoinGame }) => {
             </form>
         </>
     )
+}
+
+JoinGame.propTypes = {
+    handleJoinGame: PropTypes.func
 }
 
 export default JoinGame;

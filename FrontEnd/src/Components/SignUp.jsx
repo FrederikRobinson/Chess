@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { loginChecks } from "../Utils/boardUtils.jsx";
-
+import PropTypes from "prop-types"
 const SignUp = ({ signUpHandler }) => {
     event.preventDefault();
     const [username, setUsername] = useState("");
@@ -52,5 +52,8 @@ const SignUp = ({ signUpHandler }) => {
             </div>
         </form>
     )
+}
+NewGame.propTypes = {
+    handleCreateGame: PropTypes.func
 }
 export default SignUp
