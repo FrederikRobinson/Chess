@@ -2,6 +2,7 @@ package restservice.controllers;
 
 import com.games.ChessBoard;
 import org.springframework.web.bind.annotation.*;
+import restservice.resources.NewGameRequest;
 import restservice.services.DatabaseManager;
 import restservice.resources.GameMove;
 import restservice.resources.GameState;
@@ -20,13 +21,12 @@ public class MoveController {
         if (chessBoard == null){
             return new GameState(tempCurrentGame.getBoard(),tempCurrentGame.getCurrentPlayer());}
         //Attempt the move from the request
-        chessBoard.takeTurn(move.getPlayerColour(), move.getStartXPos(), move.getStartYPos(), move.getEndXPos(), move.getEndYPos());
+        if(!chessBoard.takeTurn(move.getPlayerColour(), move.getStartXPos(), move.getStartYPos(), move.getEndXPos(), move.getEndYPos())){
+            System.out.println("Bad");
+        }
         //If it is successful update the database and return the new board
         boolean updateDb = databaseManager.updateGame(chessBoard,move.getGameId());
         //If it fails return an error message
-        if (!tempCurrentGame.takeTurn(move.getPlayerColour(),move.getStartXPos(),move.getStartYPos(),move.getEndXPos(),move.getEndYPos())){
-            System.out.println("Bad");
-        }
 
         return new GameState(chessBoard.getBoard(),chessBoard.getCurrentPlayer());
     }
@@ -37,8 +37,9 @@ public class MoveController {
 //    }
     @CrossOrigin(origins = "http://localhost:5173")
     @PostMapping("/createGame")
-    public NewGameResponse makeGame(@RequestBody int userId){
-        return databaseManager.createGame(userId);
+    public NewGameResponse makeGame(@RequestBody NewGameRequest newGameRequest){
+
+        return databaseManager.createGame(newGameRequest.getUserId());
     }
 
     @CrossOrigin(origins = "http://localhost:5173")

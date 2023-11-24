@@ -10,7 +10,7 @@ import restservice.resources.GameState;
 import restservice.resources.NewGameResponse;
 import restservice.services.DatabaseManager;
 import websocket.resources.JoinGameResponse;
-import websocket.resources.NewGameRequest;
+import restservice.resources.NewGameRequest;
 @Controller
 public class GameMessageController {
     private DatabaseManager databaseManager = new DatabaseManager();
