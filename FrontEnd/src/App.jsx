@@ -16,10 +16,7 @@ function App() {
 
   const loginHandler = async (username, password) => {
     const newUserId = await login(username, password);
-    if (newUserId.error) {
-      newUserId = 0;
-    }
-    if (newUserId !== 0) {
+    if (!newUserId.error && newUserId !== 0) {
       setUserId(newUserId)
     }
     navigate("/");
@@ -31,10 +28,9 @@ function App() {
 
   const signUpHandler = async (username, password, email) => {
     const newUserId = await signUp(username, password, email);
-    if (newUserId.error) {
-      newUserId = 0;
+    if (!newUserId.error) {
+      setUserId(newUserId);
     }
-    setUserId(newUserId);
     navigate("/");
   }
 

@@ -1,4 +1,4 @@
-package com.games;
+package restservice.resources;
 
 public class ChessMove {
     private char playerColour;

@@ -29,7 +29,8 @@ export const login = async (username, password) => {
 }
 export const createGame = async (userId) => {
     try {
-        const res = await axios.post("http://localhost:8080/createGame", { userId });//, { startXPos, startYPos, endXPos, endYPos, playerColour, gameId });
+        console.log(userId);
+        const res = await axios.post("http://localhost:8080/createGame", { userId });
         console.log("ThisIsHere");
         console.dir(res);
         return res.data;

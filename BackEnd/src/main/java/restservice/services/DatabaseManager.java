@@ -14,6 +14,9 @@ import java.util.Random;
 public class DatabaseManager {
     Connection connection = RestServiceApplication.connection;
 
+    public void setConnection(Connection newConnection){
+        connection=newConnection;
+    }
     public int login(UserDetails user) {
         int result = 0;
         try {
