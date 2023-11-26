@@ -12,7 +12,8 @@ const SignUp = ({ signUpHandler }) => {
         setPassword("");
         setEmail("");
     }
-    return (
+    return (<>
+        <div className="pageTitle">Sign Up</div>
         <form aria-label="form" onSubmit={handleSubmit}>
             <div className="form-group">
                 <label htmlFor="username">Enter Username:&nbsp;</label>
@@ -30,7 +31,7 @@ const SignUp = ({ signUpHandler }) => {
                 <input
                     type="text"
                     name="email"
-                    placeholder="email"
+                    placeholder="Email"
                     className="form-control"
                     value={email}
                     onChange={event => setEmail(event.target.value)}
@@ -51,6 +52,7 @@ const SignUp = ({ signUpHandler }) => {
                 <input type="submit" value="Submit" className={`btn-primary`} disabled={loginChecks(username, password)} />
             </div>
         </form>
+    </>
     )
 }
 SignUp.propTypes = {

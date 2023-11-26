@@ -12,7 +12,7 @@ const Board = ({ tiles, selectedTile, currentPlayer }) => {
                     {tiles}
                 </div>
             </div>
-            <div>{selectedTile}{currentPlayer}</div>
+            {/* <div>{selectedTile}{currentPlayer}</div> */}
         </>
     )
 }

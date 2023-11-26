@@ -10,7 +10,8 @@ const Login = ({ loginHandler }) => {
         setUsername("");
         setPassword("");
     }
-    return (
+    return (<>
+        <div className="pageTitle">Login</div>
         <form aria-label="form" onSubmit={handleSubmit}>
             <div className="form-group">
                 <label htmlFor="username">Enter Username:&nbsp;</label>
@@ -38,6 +39,7 @@ const Login = ({ loginHandler }) => {
                 <input type="submit" value="Submit" className={`btn-primary`} disabled={loginChecks(username, password)} />
             </div>
         </form>
+    </>
     )
 }
 Login.propTypes = {
