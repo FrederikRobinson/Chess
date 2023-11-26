@@ -38,7 +38,6 @@ public class DatabaseManager {
 
     public int signUp(UserDetails user) {
         int userId = getNewId("users", "userId");
-        System.out.println(userId);
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "insert into users (userId, username, password, email, wins, losses,draws) values (?,?,?,?,?,?,?)");
@@ -50,7 +49,6 @@ public class DatabaseManager {
             preparedStatement.setInt(6, 0);
             preparedStatement.setInt(7, 0);
             int resultSet = preparedStatement.executeUpdate();
-            System.out.println(resultSet);
             if (resultSet == 1) {
                 return userId;
             }
@@ -125,7 +123,6 @@ public class DatabaseManager {
             preparedStatement.setInt(4, game.getCastlingCode());
             preparedStatement.setInt(5, gameId);
             int resultSet = preparedStatement.executeUpdate();
-            System.out.println(resultSet);
             return true;
         } catch (Exception e) {
             System.out.println("Error updating database");
@@ -248,7 +245,6 @@ public class DatabaseManager {
                 result.append(board[x][y].getPlayerColour());
             }
         }
-        System.out.println(result);
         return result.toString();
     }
 
