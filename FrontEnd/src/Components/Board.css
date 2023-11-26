@@ -3,23 +3,32 @@
     display: flex;
 }
 
+
 .tilesContainer {
     flex-basis: 40%;
     border-radius: 0.5rem;
     border-style: solid;
     border-width: 0.4rem;
-    border-color: rgb(205, 143, 131);
+    border-color: rgb(80, 23, 12);
     display: grid
 }
 
+.black {
+    background-color: #c13f3f;
+}
+
+.white {
+    background-color: beige;
+}
+
 .whiteHighlighted {
-    background-color: rgb(200, 200, 255);
+    background-color: rgb(200, 200, 217);
     border-color: blue;
     border: 20px;
 }
 
 .blackHighlighted {
-    background-color: rgb(185, 70, 70);
+    background-color: rgb(157, 45, 45);
     border-color: blue;
     border: 20px;
 }
@@ -113,17 +122,4 @@
 
 .y8 {
     grid-row: 1;
-}
-
-
-.black {
-    background-color: brown;
-}
-
-.white {
-    background-color: beige;
-}
-
-:root {
-    background-color: aquamarine;
 }

@@ -63,11 +63,11 @@ const BoardController = ({ userId }) => {
     const tiles = createBoard(board, functionsForTiles);
     return (
         <>
-
+<div className="boardController">
             {gameId === 0 && <NewGame handleCreateGame={handleCreateGame} />}
             {gameId !== 0 && <Board tiles={tiles} currentPlayer={currentPlayer} selectedTile={selectedTile} />}
 
-
+</div>
         </>
     )
 }

@@ -2,8 +2,8 @@ import PropTypes from "prop-types"
 const NewGame = ({ handleCreateGame }) => {
 
     return (
-        <>
-            <div className="NewGameButton" onClick={() => { handleCreateGame() }}>New Game</div>
+        <><div className="pageTitle">New Game</div>
+            <button className="newGameButton" onClick={() => { handleCreateGame() }}>Create Game</button>
         </>
     )
 }

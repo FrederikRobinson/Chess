@@ -1,6 +1,6 @@
 const Home = ({ handleJoinGame }) => {
     return (
-        <div>Home page</div>
+        <div className="pageTitle">Home</div>
     )
 }
 

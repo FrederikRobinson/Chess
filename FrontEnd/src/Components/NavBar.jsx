@@ -7,7 +7,7 @@ function NavBar({ userId, logout }) {
     return (
         <>
             <header>
-                <nav className="navbar navbar-expand-lg navbar-light bg-light">
+                <nav id="navbar" className="navbar navbar-expand-lg navbar-light bg-light">
                     <div className="container-fluid">
                         <div className="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul className="navbar-nav m-auto mb-2 mb-lg-0">
@@ -27,14 +27,14 @@ function NavBar({ userId, logout }) {
                                 {loggedIn && <li className="nav-item">
                                     <NavLink to="/" onClick={logout} >Logout</NavLink>
                                 </li>}
-                                {loggedIn && <li className="nav-item">
+                                {/* {loggedIn && <li className="nav-item">
                                     <NavLink to="/joinGame">Join Game</NavLink>
-                                </li>}
+                                </li>} */}
                             </ul>
                         </div>
                     </div>
                 </nav>
-                <div>{userId}</div>
+                {/* <div>{userId}</div> */}
             </header>
         </>
     )
