@@ -6,6 +6,7 @@ If you don't have time to set up a game on a real board or the person you want t
 Written in Java and JavaScript using
 - Node for the frontend server
 - React for display
+- Bootstrap for styling
 - Axios for RESTapi
 - Stomp for websocket connection
 - Springboot for the backend server

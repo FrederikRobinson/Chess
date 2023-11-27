@@ -22,7 +22,7 @@ public class MoveController {
             return new GameState(tempCurrentGame.getBoard(),tempCurrentGame.getCurrentPlayer());}
         //Attempt the move from the request
         if(!chessBoard.takeTurn(move.getPlayerColour(), move.getStartXPos(), move.getStartYPos(), move.getEndXPos(), move.getEndYPos())){
-            System.out.println("Bad");
+            System.out.println("Bad move");
         }
         //If it is successful update the database and return the new board
         boolean updateDb = databaseManager.updateGame(chessBoard,move.getGameId());
