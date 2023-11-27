@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import { makeMove, createGame, getGame, joinGame } from '../Utils/apiCalls.js';
 import { Routes, Route, useNavigate } from "react-router-dom";
 
-const BoardController = ({ userId }) => {
+const BoardController = ({ handleSetErrorDisplay, userId }) => {
 
     const navigate = useNavigate();
 
@@ -33,21 +33,26 @@ const BoardController = ({ userId }) => {
             setPlayer(getColourFromTurnNumber(res.playerNumber))
             setCurrentPlayer("W");
         }
+        if (res.error) {
+            handleSetErrorDisplay("Unable to create game")
+        }
 
     }
 
     const handleMakeMove = async (startXPos, startYPos, endXPos, endYPos, playerColour, gameId) => {
-        try {
-            const res = await makeMove(startXPos, startYPos, endXPos, endYPos, playerColour, gameId);
-            console.dir(res);
+        const res = await makeMove(startXPos, startYPos, endXPos, endYPos, playerColour, gameId);
+        if (res.error) {
+            handleSetErrorDisplay("Unable to make move")
+        }
+        else {
+            if (res.playerTurn === currentPlayer) {
+                handleSetErrorDisplay("Invalid move")
+            }
             setBoard(res.updatedBoard);
             setSelectedTile([-1, -1]);
             setCurrentPlayer(res.playerTurn);
+        }
 
-        }
-        catch {
-            //TODO error pop up for invalid move or connection error
-        }
     }
     const handleTileSelection = (xPos, yPos) => {
         selectedTile[0] == -1
@@ -63,17 +68,18 @@ const BoardController = ({ userId }) => {
     const tiles = createBoard(board, functionsForTiles);
     return (
         <>
-<div className="boardController">
-            {gameId === 0 && <NewGame handleCreateGame={handleCreateGame} />}
-            {gameId !== 0 && <Board tiles={tiles} currentPlayer={currentPlayer} selectedTile={selectedTile} />}
+            <div className="boardController">
+                {gameId === 0 && <NewGame handleCreateGame={handleCreateGame} />}
+                {gameId !== 0 && <Board tiles={tiles} currentPlayer={currentPlayer} selectedTile={selectedTile} />}
 
-</div>
+            </div>
         </>
     )
 }
 
 BoardController.propTypes = {
-    userId: PropTypes.number
+    userId: PropTypes.number,
+    handleSetErrorDisplay: PropTypes.func
 }
 export default BoardController;
 

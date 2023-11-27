@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom"
 import PropTypes from "prop-types"
 
-function NavBar({ userId, logout }) {
+function NavBar({ errorDisplay, userId, logout }) {
     const loggedIn = userId !== 0;
 
     return (
@@ -34,13 +34,14 @@ function NavBar({ userId, logout }) {
                         </div>
                     </div>
                 </nav>
-                {/* <div>{userId}</div> */}
+                <div className="errorDisplay">{errorDisplay}</div>
             </header>
         </>
     )
 }
 
 NavBar.propTypes = {
+    errorDisplay: PropTypes.string,
     userId: PropTypes.number,
     logout: PropTypes.func
 }

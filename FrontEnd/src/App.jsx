@@ -11,15 +11,25 @@ import BoardController from './Components/BoardController.jsx';
 function App() {
   const navigate = useNavigate();
 
-  const [userId, setUserId] = useState(-1686273342);
+  const [userId, setUserId] = useState(0);// - 1686273342
   const [gameId, setGameId] = useState(0);
+  const [errorDisplay, setErrorDisplay] = useState("");
+
+  const handleSetErrorDisplay = (errorMessage) => {
+    setErrorDisplay(errorMessage);
+    setTimeout(() => { setErrorDisplay("") }, 5000);
+  }
 
   const loginHandler = async (username, password) => {
     const newUserId = await login(username, password);
     if (!newUserId.error && newUserId !== 0) {
       setUserId(newUserId)
+      navigate("/");
     }
-    navigate("/");
+    else {
+      handleSetErrorDisplay("Unable to login")
+    }
+
 
   }
   const logout = () => {
@@ -30,16 +40,20 @@ function App() {
     const newUserId = await signUp(username, password, email);
     if (!newUserId.error) {
       setUserId(newUserId);
+      navigate("/");
     }
-    navigate("/");
+    if (newUserId.error) {
+      handleSetErrorDisplay("Unable to sign up")
+    }
+
   }
 
   return (
     <>
-      <NavBar userId={userId} logout={logout} />
+      <NavBar errorDisplay={errorDisplay} userId={userId} logout={logout} />
       <Routes>
         <Route path="" element={<Home />} />
-        <Route path="/play" element={<BoardController userId={userId} />} />
+        <Route path="/play" element={<BoardController handleSetErrorDisplay={handleSetErrorDisplay} userId={userId} />} />
         <Route path="/signUp" element={<SignUp signUpHandler={signUpHandler} />} />
         <Route path="/login" element={<Login loginHandler={loginHandler} />} />
       </Routes>
