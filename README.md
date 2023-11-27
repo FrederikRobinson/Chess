@@ -22,12 +22,16 @@ After creating an account and signing in you can create a new game of chess. Cur
 
 ## How to run
 
-A mySQL database running on "jdbc:mysql://localhost:3306/testdb" with a username and password of student. This will be altered in later versions.
+A mySQL database running on ```jdbc:mysql://localhost:3306/testdb``` with a username and password of ```student```. This will be altered in later versions.
 
-To start the backend run  ./mvnw spring-boot:run from within the BackEnd folder
+To start the backend run 
+```./mvnw spring-boot:run```
+from within the BackEnd folder
 This will run on localhost port 8080
 
-To start the frontend run npm run dev from within the FrontEnd folder
+To start the frontend run 
+```npm run dev``` 
+from within the FrontEnd folder
 This will run on localhost port 5173
 
 To access the webpage go to http://localhost:5173/
@@ -70,7 +74,7 @@ The back end is built with maven and mostly follows the standard structure with 
 - Implement promotion (The last piece of game logic)
 - Improve the look of the css
 - Add more tests for better coverage
-- Refactor to clean up the backend
+- Refactor to separate game and board classes
 - Create win/loss screen
 - Record a win loss record for each account
 - Display win/loss record to user
@@ -80,3 +84,5 @@ The back end is built with maven and mostly follows the standard structure with 
 - Notification of your turn
 - Create a basic AI opponent
 - Allow other games to be played on the board
+- Game chat during games
+- Timed games
