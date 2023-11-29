@@ -9,9 +9,9 @@ import java.sql.DriverManager;
 //@SpringBootApplication
 
 public class WebsocketApplication {
-    public static Connection connection;
+//    public static Connection connection;
 
-    public static void main(String[] args) {
+//    public static void main(String[] args) {
 
 //        try {
 //            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/testdb", "student", "student");
@@ -21,5 +21,5 @@ public class WebsocketApplication {
 //            System.out.println(e);
 //        }
 //        SpringApplication.run(WebsocketApplication.class, args);
-    }
+//    }
 }
