@@ -29,7 +29,7 @@ public class DatabaseManager {
             while (myResult.next()) {
                 result = myResult.getInt("userId");
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println(e);
             result = 0;
         }
@@ -52,7 +52,7 @@ public class DatabaseManager {
             if (resultSet == 1) {
                 return userId;
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error creating new user");
             System.out.println(e);
         }
@@ -83,7 +83,7 @@ public class DatabaseManager {
                 response = new NewGameResponse(game.getBoard(), gameId,mainPlayerTurnNumber,'W');
             }
             return response;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error updating database");
             System.out.println(e);
             return null;
@@ -94,23 +94,25 @@ public class DatabaseManager {
         Random random = new Random();
         ResultSet myResult;
         int gameId;
-        try {
+//        try {
             // do {
             gameId = random.nextInt();
+
+            //TODO: Fix this random number check or switch to using IDs created by mySQL
             // PreparedStatement preparedStatement = connection.prepareStatement("select *
             // from ? where ? = ?");
             // preparedStatement.setString(1, databaseName);
             // preparedStatement.setString(2, idColumn);
             // preparedStatement.setInt(3, gameId);
-
             // myResult = preparedStatement.executeQuery();
             // } while (myResult.next());
+
             return gameId;
-        } catch (Exception e) {
-            System.out.println("Error finding new Id for user");
-            System.out.println(e);
-            return 0;
-        }
+//        } catch (Exception e) {
+//            System.out.println("Error finding new Id for user");
+//            System.out.println(e);
+//            return 0;
+//        }
     }
 
     public boolean updateGame(ChessBoard game, int gameId) {
@@ -123,8 +125,9 @@ public class DatabaseManager {
             preparedStatement.setInt(4, game.getCastlingCode());
             preparedStatement.setInt(5, gameId);
             int resultSet = preparedStatement.executeUpdate();
-            return true;
-        } catch (Exception e) {
+            return resultSet==1;
+
+        } catch (SQLException e) {
             System.out.println("Error updating database");
             System.out.println(e);
             return false;
@@ -142,61 +145,16 @@ public class DatabaseManager {
             while (resultSet.next()) {
                 result = convertToGame(resultSet);
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println(e);
         }
         return result;
     }
-    public JoinGameResponse joinGame(int userId, int gameId) {
-        ChessBoard result = null;
-        JoinGameResponse joinGameResponse = null;
 
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement("select * from games where GameID = ?");
-            preparedStatement.setInt(1, gameId);
 
-            ResultSet resultSet = preparedStatement.executeQuery();// myStatement.executeQuery("select * from games");
-            while (resultSet.next()) {
-                int playerNumber = getPlayerNumber(resultSet,userId,gameId);
-                result = convertToGame(resultSet);
-                joinGameResponse = new JoinGameResponse(result.getBoard(),playerNumber, result.getCurrentPlayer());
-            }
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return joinGameResponse;
-    }
-    private int getPlayerNumber(ResultSet resultSet,int userId,int gameId)throws Exception {
-        if (resultSet.getInt("PlayerOneID")==userId){
-            return 0;
-        }
-        if (resultSet.getInt("PlayerTwoID")==userId){
-            return 1;
-        }
-        if(resultSet.getInt("PlayerOneID")==0){
-            addPlayer(userId,gameId,0);
-            return 0;
-        }
-        if(resultSet.getInt("PlayerTwoID")==0){
-            addPlayer(userId,gameId,1);
-            return 1;
-        }
-        return -1;
-    }
-    public void addPlayer(int userId,int gameId,int playerPosition){
-        String playerIdColumn = playerPosition==0?"PlayerOneID":playerPosition==1?"PlayerTwoID":"";
-        try{
-        PreparedStatement preparedStatement = connection.prepareStatement(
-                "update games set ? = ? where GameID = ?");
-        preparedStatement.setString(1, playerIdColumn);
-        preparedStatement.setInt(2, userId);
-        preparedStatement.setInt(3, gameId);
-        preparedStatement.executeUpdate();}
-        catch (Exception e){
-            System.out.println("error adding player to game");
-            System.out.println(e);
-        }
-    }
+
+
+
 //    public ChessBoard checkGame(int userId,int gameId) {
 //        ChessBoard result = null;
 //
@@ -217,7 +175,7 @@ public class DatabaseManager {
 //        return result;
 //    }
 
-    private ChessBoard convertToGame(ResultSet resultSet) {
+    public ChessBoard convertToGame(ResultSet resultSet) {
         ChessBoard newBoard = new ChessBoard();
         try {
             placePieces(newBoard, resultSet.getString("Board"));
@@ -225,10 +183,10 @@ public class DatabaseManager {
             newBoard.setEnPassant(resultSet.getInt("EnPassant"));
             newBoard.setCastling(resultSet.getInt("Castling"));
             return newBoard;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error recreating board");
             System.out.println(e);
-            return new ChessBoard();
+            return null;
         }
     }
 
@@ -248,8 +206,7 @@ public class DatabaseManager {
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
                 game.placePiece(
-                        game.getPiece(boardString.charAt(stringPosition++), boardString.charAt(stringPosition++)), x,
-                        y);
+                        game.getPiece(boardString.charAt(stringPosition++), boardString.charAt(stringPosition++)), x, y);
             }
         }
     }

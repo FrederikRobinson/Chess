@@ -43,9 +43,5 @@ public class MoveController {
         }
         return new GameState(chessBoard.getBoard(), chessBoard.getCurrentPlayer());
     }
-    @CrossOrigin(origins = "http://localhost:5173")
-    @PostMapping("/joinGame")
-    public JoinGameResponse joinGame(@RequestBody int userId,int gameId){
-        return databaseManager.joinGame(userId,gameId);
-    }
+
 }

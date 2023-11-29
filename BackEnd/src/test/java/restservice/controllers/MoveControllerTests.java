@@ -81,11 +81,7 @@ public class MoveControllerTests {
         testMoveController.makeGame(mockNewGameRequest);
         verify(mockDatabaseManager, times(1)).createGame(exampleUserId);
     }
-    @Test
-    public void JoinGameCallsCreateGameFromDatabaseManager() throws Exception {
-        testMoveController.joinGame(exampleUserId,exampleGameId);
-        verify(mockDatabaseManager, times(1)).joinGame(exampleUserId,exampleGameId);
-    }
+
     @Test
     public void GetGameCallsGetGameFromDatabaseManager() throws Exception{
 
