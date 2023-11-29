@@ -138,12 +138,7 @@ public class DatabaseManager {
             PreparedStatement preparedStatement = connection.prepareStatement("select * from games where GameID = ?");
             preparedStatement.setInt(1, gameId);
 
-            // Statement myStatement = connection.createStatement();
-            // myStatement.executeUpdate("insert into games (GameID, Board, PlayerTurn,
-            // PlayerOneID, PlayerTwoID, EnPassant, Castling) values (1,
-            // 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-            // 'W', 40, 37, 3, 2)");
-            ResultSet resultSet = preparedStatement.executeQuery();// myStatement.executeQuery("select * from games");
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 result = convertToGame(resultSet);
             }
