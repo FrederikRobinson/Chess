@@ -36,29 +36,29 @@ export const createGame = async (userId) => {
         return { error: e.response.data }
     }
 }
-// export const getGame = async (gameId) => {
-//     try {
-//         const res = await axios.post("http://localhost:8080/getGame", { gameId });//, { startXPos, startYPos, endXPos, endYPos, playerColour, gameId });
-//         console.log("ThisIsHere");
-//         console.dir(res);
-//         return res.data;
-//     }
-//     catch (e) {
-//         console.log("Here");
-//         console.dir(e);
-//         return { error: e.response.data }
-//     }
-// }
-// export const joinGame = async (userId, gameId) => {
-//     try {
-//         const res = await axios.post("http://localhost:8080/joinGame", { userId, gameId });//, { startXPos, startYPos, endXPos, endYPos, playerColour, gameId });
-//         console.log("ThisIsHere");
-//         console.dir(res);
-//         return res.data;
-//     }
-//     catch (e) {
-//         console.log("Here");
-//         console.dir(e);
-//         return { error: e.response.data }
-//     }
-// }
+export const getGame = async (gameId) => {
+    try {
+        const res = await axios.post("http://localhost:8080/getGame", { gameId });//, { startXPos, startYPos, endXPos, endYPos, playerColour, gameId });
+        console.log("ThisIsHere");
+        console.dir(res);
+        return res.data;
+    }
+    catch (e) {
+        console.log("Here");
+        console.dir(e);
+        return { error: e.response.data }
+    }
+}
+export const joinGame = async (userId, gameId) => {
+    try {
+        const res = await axios.post("http://localhost:8080/joinGame", { userId, gameId });//, { startXPos, startYPos, endXPos, endYPos, playerColour, gameId });
+        console.log("ThisIsHere");
+        console.dir(res);
+        return res.data;
+    }
+    catch (e) {
+        console.log("Here");
+        console.dir(e);
+        return { error: e.response.data }
+    }
+}
