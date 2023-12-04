@@ -43,24 +43,23 @@ const BoardController = ({ handleSetErrorDisplay, userId }) => {
         const res = await makeMove(startXPos, startYPos, endXPos, endYPos, playerColour, gameId);
         if (res.error) {
             handleSetErrorDisplay("Unable to make move")
+            return;
         }
-        else {
-            if (res.playerTurn === currentPlayer) {
-                handleSetErrorDisplay("Invalid move")
-            }
-            setBoard(res.updatedBoard);
-            setSelectedTile([-1, -1]);
-            setCurrentPlayer(res.playerTurn);
+        if (res.playerTurn === currentPlayer) {
+            handleSetErrorDisplay("Invalid move")
         }
+        setBoard(res.updatedBoard);
+        setCurrentPlayer(res.playerTurn);
 
     }
     const handleTileSelection = (xPos, yPos) => {
-        selectedTile[0] == -1
-            ?
+        if (selectedTile[0] == -1) {
             setSelectedTile([xPos, yPos])
-            :
+        }
+        else {
             handleMakeMove(selectedTile[0], selectedTile[1], xPos, yPos, currentPlayer, gameId);
-
+            setSelectedTile([-1, -1]);
+        }
     }
 
     const isTileSelected = (xPos, yPos) => { return xPos == selectedTile[0] && yPos == selectedTile[1] ? "Highlighted" : ""; }
